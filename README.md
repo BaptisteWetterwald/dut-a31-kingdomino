@@ -41,7 +41,7 @@ Attendus
 Votre application doit proposer ces fonctionnalités :
 
 - Choix du nombre de joueurs (2 à 4)
-- Sélection **avant le début de la partie** des règles de calcul optionnelles parmi "Dynastie", "Empire du milieu" et "Harmonie"
+- Sélection **avant le début de la partie** des règles de calcul optionnelles parmi "Empire du milieu" et "Harmonie"
 - Chaque joueur positionne initialement son château dans son royaume : il ne pourra plus être déplacé
 - À son tour un joueur doit pouvoir placer dans son royaume le domino présélectionné **puis** sélectionner le domino suivant
 - Votre application graphique doit proposer :
@@ -60,7 +60,7 @@ Consignes
 - Forkez le dépôt https://git.unistra.fr/a313/a31-kingdomino dans le groupe créé ci-dessus
 - Ajoutez le responsable du module et votre enseignant de TP comme Reporter de votre dépôt
 
-### Sur toute la durée 
+### Sur toute la durée
 
 - Ce projet est à réaliser **en binôme**.
 - Vous devez concevoir en UML et implémenter en Java le jeu de société Kingdomino, en respectant une **architecture MVC** et en proposant une **interface graphique en Swing**.
