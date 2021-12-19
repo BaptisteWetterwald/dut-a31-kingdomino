@@ -1,0 +1,268 @@
+@startuml
+
+title __CORE's Class Diagram__\n
+
+  namespace core {
+    class core.App {
+        {static} + main()
+    }
+  }
+  
+
+  namespace core {
+    enum Biome {
+      CASTLE
+      FOREST
+      GRASS
+      MINE
+      SWAMP
+      WATER
+      WHEAT
+      color
+    }
+  }
+  
+
+  namespace core {
+    class core.Board {
+        - kingdomsGridPanel : JPanel
+        - rightPanel : JPanel
+        - selectedDominoButtons : JButton[][]
+        - selectedDominoPanel : JPanel
+        + Board()
+        + addKingdomPanel()
+        + addWalletPanel()
+        + setSelectedDomino()
+        - paintButtons()
+    }
+  }
+  
+
+  namespace core {
+    class core.Castle {
+        + Castle()
+    }
+  }
+  
+
+  namespace core {
+    class core.Constants {
+        {static} + CROWN : String
+        {static} + FLIP_180 : String
+        {static} + FLIP_LEFT : String
+        {static} + FLIP_RIGHT : String
+        {static} + HEIGHT_KINGDOM_2_PLAYERS : int
+        {static} + HEIGHT_KINGDOM_NORMAL : int
+        {static} + KINGDOM_COLOR_MISSING_TILE : Color
+        {static} + KINGDOM_PADDING : int
+        {static} + PATH_CSV : String
+        {static} + WIDTH_KINGDOM_2_PLAYERS : int
+        {static} + WIDTH_KINGDOM_NORMAL : int
+        {static} + WINDOW_TITLE : String
+    }
+  }
+  
+
+  namespace core {
+    class core.Domino {
+        - horizontal : boolean
+        - id : int
+        - tiles : Tile[]
+        + Domino()
+        + flip180()
+        + flipLeft()
+        + flipRight()
+        + getId()
+        + getTiles()
+        + isHorizontal()
+        + toString()
+        - switchTiles()
+    }
+  }
+  
+
+  namespace core {
+    class core.Duo {
+        + Duo()
+        + getNbPlayers()
+        ~ getHeightGrid()
+        ~ getWidthGrid()
+    }
+  }
+  
+
+  namespace core {
+    abstract class core.GameMode {
+        ~ random : Random
+        ~ rules : String
+        ~ sc : Scanner
+        - deck : List<Domino>
+        - newOrder : Player[]
+        - players : List<Player>
+        + GameMode()
+        + getIndexOf()
+        ~ getHeightGrid()
+        {abstract} ~ getNbPlayers()
+        ~ getRules()
+        ~ getWidthGrid()
+        ~ print()
+        - gameProgress()
+        - getAvailableDominos()
+        - nextRound()
+        - turnOf()
+    }
+  }
+  
+
+  namespace core {
+    interface core.IObserver {
+        {abstract} + update()
+    }
+  }
+  
+
+  namespace core {
+    class core.Kingdom {
+        - grid : Tile[][]
+        + Kingdom()
+        + getGrid()
+    }
+  }
+  
+
+  namespace core {
+    class core.KingdomObserver {
+        - buttons : JButton[][]
+        - gridHeight : int
+        - gridWidth : int
+        + KingdomObserver()
+        + update()
+    }
+  }
+  
+
+  namespace core {
+    abstract class core.Observable {
+        - observers : List<IObserver>
+        + Observable()
+        + addObserver()
+        + notifyObservers()
+    }
+  }
+  
+
+  namespace core {
+    class core.ParametersGUI {
+        ~ bigpannel : JPanel
+        ~ fourplayers : JRadioButton
+        ~ harmonyMode : JCheckBox
+        ~ middleEmpireMode : JCheckBox
+        ~ modeSelection : JPanel
+        ~ names : JPanel
+        ~ nbplayersSelection : JPanel
+        ~ panel : JPanel
+        ~ threeplayers : JRadioButton
+        ~ twoplayers : JRadioButton
+        + ParametersGUI()
+    }
+  }
+  
+
+  namespace core {
+    class core.Player {
+        - name : String
+        + Player()
+        + getKingdom()
+        + getName()
+        + setKingdom()
+        + toString()
+    }
+  }
+  
+
+  namespace core {
+    class core.Quatuor {
+        + Quatuor()
+        + getNbPlayers()
+    }
+  }
+  
+
+  namespace core {
+    class core.ReaderCSV {
+        - path : String
+        + ReaderCSV()
+        + generateDominos()
+    }
+  }
+  
+
+  namespace core {
+    class core.Tile {
+        - crowns : int
+        + Tile()
+        + getBiome()
+        + getCrowns()
+        + getCrownsAsString()
+        + toString()
+    }
+  }
+  
+
+  namespace core {
+    class core.Trio {
+        + Trio()
+        + getNbPlayers()
+    }
+  }
+  
+
+  namespace core {
+    class core.Wallet {
+        - dominos : List<Domino>
+        - size : int
+        + Wallet()
+        + getDominos()
+        + getSize()
+    }
+  }
+  
+
+  namespace core {
+    class core.WalletObserver {
+        - dominosPanel : JPanel[]
+        - map : HashMap<JPanel, JButton[]>
+        + WalletObserver()
+        + update()
+    }
+  }
+  
+
+  core.Board -up-|> javax.swing.JFrame
+  core.Board o-- core.Domino : selectedDomino
+  core.Castle -up-|> core.Tile
+  core.Duo -up-|> core.GameMode
+  core.GameMode o-- core.Board : board
+  core.GameMode o-- core.ReaderCSV : reader
+  core.GameMode o-- core.Wallet : wallet
+  core.Kingdom -up-|> core.Observable
+  core.KingdomObserver .up.|> core.IObserver
+  core.KingdomObserver -up-|> javax.swing.JFrame
+  core.ParametersGUI -up-|> javax.swing.JFrame
+  core.Player o-- core.Kingdom : kingdom
+  core.Quatuor -up-|> core.GameMode
+  core.Tile o-- core.Biome : biome
+  core.Trio -up-|> core.GameMode
+  core.Wallet -up-|> core.Observable
+  core.WalletObserver .up.|> core.IObserver
+  core.WalletObserver -up-|> javax.swing.JFrame
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
