@@ -159,7 +159,6 @@ package controller
     {
         +Game()
         +turnOf(p:Player)
-        +print(deck:Domino)
         -nextRound()
         -gameprogress()
         -quickSetup()
@@ -174,23 +173,23 @@ Game *--> "1" Player:  >  players[*]
 Game *--> Player : > newOrder[*]
 Game *--> Board : > board
 Game *--> Wallet:  >  wallet
-Game *--> IObserver
+Game ..> IObserver : <<use>>
 Kingdom *--> Tile:  >  grid[*]
 ParametersGUI *--> "1" Player:  >  players[*]
 Player o--> "1"Kingdom:   kingdom
 Tile *--> "1" Biome:  >  biome
 Wallet *--> Domino :  >  dominos[*]
 Board o--> "1" Domino :  > selectedDomino
-App  ..> Game : <<use>>
-Game ..> CSVReader : <<use>>
+App  .> Game : <<use>>
+Game .> CSVReader : <<use>>
 Game ..> ParametersGUI : <<use>>
 Player o--> Domino : > lastPlayedDomino
 Wallet *--> Domino : > used[*]
 Kingdom ..> Castle : <<use>>
-Observable o--> IObserver : > observers[*]
-KingdomObserver .> Board : <<use>>
-KingdomObserver .> Player : <<use>>
-WalletObserver .> Wallet : <<use>>
-WalletObserver .> Board : <<use>>
+Observable o-up-> IObserver : > observers[*]
+KingdomObserver ..> Board : <<use>>
+KingdomObserver ..> Player : <<use>>
+WalletObserver ..> Wallet : <<use>>
+WalletObserver ..> Board : <<use>>
 
 @enduml
