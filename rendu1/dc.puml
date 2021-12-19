@@ -167,25 +167,25 @@ package controller
 
 }
 
-Domino *--> Tile : > tiles[*]
-Game *--> "1" Domino:  >  deck[*]
-Game *--> "1" Player:  >  players[*]
-Game *--> Player : > newOrder[*]
-Game *--> Board : > board
-Game *--> Wallet:  >  wallet
+Domino *--> "2" Tile : > tiles[*]
+Game *--> "12..48" Domino :  >  deck[*]
+Game *--> "2..4" Player :  >  players[*]
+Game *--> "2..4" Player : > newOrder[*]
+Game *--> "1" Board : > board
+Game *--> "1" Wallet :  >  wallet
 Game ..> IObserver : <<use>>
-Kingdom *--> Tile:  >  grid[*]
-ParametersGUI *--> "1" Player:  >  players[*]
-Player o--> "1"Kingdom:   kingdom
-Tile *--> "1" Biome:  >  biome
-Wallet *--> Domino :  >  dominos[*]
-Board o--> "1" Domino :  > selectedDomino
+Kingdom *--> Tile :  >  grid[*]
+ParametersGUI *--> "2..4" Player:  >  players[*]
+Player o--> "1"Kingdom :   kingdom
+Tile *--> "1" Biome :  >  biome
+Wallet *--> "3..4" Domino :  >  dominos[*]
+Board o--> "0..1" Domino :  > selectedDomino
 App  .> Game : <<use>>
 Game .> CSVReader : <<use>>
 Game ..> ParametersGUI : <<use>>
-Player o--> Domino : > lastPlayedDomino
-Wallet *--> Domino : > used[*]
-Kingdom ..> Castle : <<use>>
+Player o--> "1" Domino : > lastPlayedDomino
+Wallet *--> "0..4" Domino : > used[*]
+Kingdom ..> "1" Castle : <<use>>
 Observable o-up-> IObserver : > observers[*]
 KingdomObserver ..> Board : <<use>>
 KingdomObserver ..> Player : <<use>>
