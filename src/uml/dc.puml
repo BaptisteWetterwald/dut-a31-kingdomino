@@ -1,11 +1,8 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-'Implémenter un design pattern decorator pour l'ajout des contraintes :
-'Remplissage du carré sans trou, château au milieu etc pour compter les points
 skinparam classFontStyle Bold
 hide enum methods
-
 
 package view
 {
@@ -148,10 +145,10 @@ package model
         +setScore(score:Integer)
     }
 
-    class ReaderCSV
+    class CSVReader
     {
         -path:String
-        +ReaderCSV()
+        +CSVReader()
         +generateDominos():Domino[*]
     }
 
@@ -214,7 +211,7 @@ Wallet *-> Domino :  >  dominos[*]
 Board o-> "1" Domino :  > selectedDomino
 KingdomObserver o-> Kingdom :  > kingdom
 App  .> Game : <<use>>
-Game .> ReaderCSV : <<use>>
+Game .> CSVReader : <<use>>
 Game .> ParametersGUI : <<use>>
 Player o-> Domino : > lastPlayedDomino
 Wallet *-> Domino : > used[*]

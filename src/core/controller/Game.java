@@ -22,11 +22,12 @@ public class Game
     {
         players = new ArrayList<>();
 
-        quickSetup();
+        //quickSetup();
+        slowSetup();
 
         int nbPlayers = this.players.size();
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
-        ReaderCSV reader = new ReaderCSV();
+        CSVReader reader = new CSVReader();
         List<Domino> allDominos = reader.generateDominos();
         while (deck.size() < nbPlayers * 12)
         {

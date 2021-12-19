@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class ReaderCSV
+public class CSVReader
 {
 
     public List<Domino> generateDominos()

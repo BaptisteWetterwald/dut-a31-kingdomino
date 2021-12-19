@@ -23,7 +23,6 @@ public class Board extends JFrame
     public Board()
     {
         this.setTitle(Constants.WINDOW_TITLE);
-        //this.setSize(2000, 1000);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
@@ -118,7 +117,7 @@ public class Board extends JFrame
         instructionsLabels[0].setText("1) Select a domino on the right");
         instructionsLabels[1].setText("2) Modify it");
         instructionsLabels[2].setText("3) Place it on your kingdom");
-        instructionsLabels[3].setText("Or skip your turn");
+        instructionsLabels[3].setText("or skip your turn");
         instructionsLabels[4].setText("(this will ban the domino)");
 
         flipDominoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -68,7 +68,6 @@ public class ParametersGUI extends JFrame {
                     if(((JRadioButton) r).isSelected())
                     {
                         int id=Integer.parseInt(((JRadioButton) r).getText().substring(0,1));
-                        System.out.println(id);
                         names.removeAll();
                         for (int i = 0; i < id; i++) {
                             label = new JLabel("Player n°" + (i+1));
@@ -92,10 +91,6 @@ public class ParametersGUI extends JFrame {
                 {
                     players.add(new Player(((JTextField) r).getText()));
                 }
-            }
-            for (Player p:players)
-            {
-                System.out.println(p.toString());
             }
         });
 
