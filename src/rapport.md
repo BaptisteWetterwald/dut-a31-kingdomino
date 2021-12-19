@@ -1,8 +1,8 @@
 _Baptiste WETTERWALD - Hamza LOUADA - Gr2_
 
-##Rapport A31 - Version 1 (19/12/2021)
+## **Rapport A31 - Version 1 (19/12/2021)**
 
-###Choix de conception :
+### **Choix de conception :**
 
 **Modèle MVC :**
 
@@ -69,16 +69,16 @@ C’est une classe abstraite, superclasse de tous les objets pouvant être obser
 
 Gère l’affichage du plateau de jeu complet : il contient le Wallet, les Kingdoms et la sélection/modification du domino avant placement dans l’un des Kingdoms.
 
-###Notre exécutable :
+### **Notre exécutable :**
 Notre exécutable est un fichier .JAR contenant à la fois nos classes compilées et le fichier CSV permettant d’instancier nos différents dominos.
 Il suffit de le lancer (java -jar a31-kingdomino-fork) pour que l’application démarre.
 
-###Ce que nous avons déjà fait :
+### **Ce que nous avons déjà fait :**
 Avant que la partie ne commence, une interface est proposée au joueur : il choisira le nombre de joueurs et les variantes (harmonie/empire du milieu) avec lesquelles il souhaite jouer.
 Ensuite, le jeu démarre : les joueurs vont, chacun leur tour, choisir un domino dans la liste de dominos à droite dans l’interface (c’est ce qu’on a appelé “Wallet”). Une fois le domino sélectionné, ils pourront le tourner comme ils le souhaitent, puis le placer sur leur royaume (grille de 5*5) ou bien choisir de passer leur tour (s’ils ne peuvent pas poser de domino parmi ceux disponibles dans le wallet), empêchant ainsi les autres joueurs de choisir le domino sélectionné. L’ordre des joueurs pour le tour suivant dépend du domino choisi.
 Pour l’instant, le calcul du score s’effectue à la fin du tour de chaque joueur, mais ne prend pas en compte les variantes.
 
-###Ce qu’il nous reste à coder :
+### **Ce qu’il nous reste à coder :**
 - Des flèches pour déplacer les éléments dans la grille du joueur, lui permettant de choisir de respecter ou non la variante Empire du Milieu.
 - Le calcul du score avec les variantes.
 - L’affichage des scores à la fin.
