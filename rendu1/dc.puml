@@ -88,12 +88,14 @@ package model
         l:Integer, c:Integer, l2:Integer, c2:Integer)
         -getFirstUntreatedTile(terrains:Tile[*]):Integer[*]
     }
+
     abstract class Observable <<abstract>>
-        {
-            +Observable()
-            +notifyObservers()
-            +addObserver(observer:IObserver)
-        }
+    {
+        +Observable()
+        +notifyObservers()
+        +addObserver(observer:IObserver)
+    }
+
     class ParametersGUI
     {
         +ParametersGUI()
