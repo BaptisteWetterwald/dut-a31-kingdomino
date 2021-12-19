@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="a31-kingdomino-fork:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/a31_kingdomino_fork_jar</output-path>
+    <root id="archive" name="a31-kingdomino-fork.jar">
+      <element id="module-output" name="a31-kingdomino-fork" />
+    </root>
+  </artifact>
+</component>

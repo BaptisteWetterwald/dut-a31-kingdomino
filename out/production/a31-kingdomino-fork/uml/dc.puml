@@ -1,0 +1,231 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+'Implémenter un design pattern decorator pour l'ajout des contraintes :
+'Remplissage du carré sans trou, château au milieu etc pour compter les points
+skinparam classFontStyle Bold
+hide enum methods
+
+
+package view
+{
+    abstract class Observable <<abstract>>
+    {
+        +Observable()
+        +notifyObservers()
+        +addObserver(observer:IObserver)
+    }
+
+    class KingdomObserver implements IObserver
+    {
+        -gridWidth:Integer
+        -gridHeight:Integer
+        +KingdomObserver(board:Board, player:Player):
+        +update(object:Observable)
+    }
+
+    interface IObserver <<interface>>
+    {
+        +update(object:Observable)
+    }
+
+    class Board
+    {
+        -clickedTileIndex:Integer
+        +Board()
+        +setSelectedDomino(domino:Domino)
+        +setClickedTileIndex(clickedTileIndex:Integer)
+        +paintButtons(domino:Domino)
+        +getSelectedDomino():Domino
+        +getClickedTileIndex():Integer
+    }
+
+    class WalletObserver implements IObserver
+    {
+        +WalletObserver(wallet:Wallet, board: Board)
+        +update(object Observable):
+    }
+}
+
+package model
+{
+    enum Biome <<enum>>
+    {
+        CASTLE
+        WHEAT
+        FOREST
+        WATER
+        GRASS
+        SWAMP
+        MINE
+        +parse()
+    }
+
+    class Castle extends Tile
+    {
+        +Castle()
+    }
+
+    class Constants
+    {
+        {static} + CROWN_SYMBOL : String
+        {static} + FLIP_180 : String
+        {static} + FLIP_LEFT : String
+        {static} + FLIP_RIGHT : String
+        {static} + KINGDOM_PADDING : Integer
+        {static} + WIDTH_KINGDOM_NORMAL : Integer
+        {static} + HEIGHT_KINGDOM_NORMAL : Integer
+        {static} + WINDOW_TITLE : String
+    }
+
+    class Domino
+    {
+    +Domino(id:Integer, t1:Tile, t2:Tile )
+    -id:Integer
+    -horizontal:boolean
+    +getId():Integer
+    +getTiles():Tile[*]
+    +toString():String
+    +flipRight()
+    +flip180()
+    +flipLeft()
+    +switchTiles()
+    +isHorizontal():boolean
+}
+
+    class Game
+    {
+        +Game()
+        +turnOf(p:Player)
+        +print(deck:Domino)
+        +getHeightGrid():Integer
+        +getWidthGrid():Integer
+        -nextRound()
+        -gameprogress()
+        -quickSetup()
+        -slowSetup()
+    }
+
+    class Kingdom extends Observable
+    {
+        -modifiable:boolean
+        +Kingdom(height:Integer,width:Integer)
+        +getGrid():Tile[*]
+        +tryDominoPlacement(lineIndex:Integer,columnIndex:Integer,
+        domino:Domino,clickedTileIndex:Integer,p:Player)
+        +placeDomino(domino:Domino, p:Player)
+        +isModifiable():boolean
+        +setModifiable(modifiable:boolean)
+        +hasValidNeighbor(t1:Tile, l:Integer, c:Integer):boolean
+        +getScore():Integer
+        +fillTerrainOfTile(terrain:Tile[*], untreated:Integer[*])
+        -addNeighbor(neighbors:Integer[*], terrain:Tile[*],
+        l:Integer, c:Integer, l2:Integer, c2:Integer)
+        -getFirstUntreatedTile(terrains:Tile[*]):Integer[*]
+    }
+
+    class ParametersGUI
+    {
+        +ParametersGUI()
+        +getPlayers():Player[*]
+    }
+
+    class Player
+    {
+        -name:String
+        -played:boolean
+        -score:Integer
+        +Player(name:String)
+        +getName():String
+        +setKingdom(kingdom:Kingdom)
+        +getKingdom():Kingdom
+        +toString():String
+        +hasPlayed():boolean
+        +setPlayed(hasPlayed:boolean)
+        +getLastPlayedDomino():Domino
+        +setLastPlayedDomino(domino:Domino)
+        +getScore():Integer
+        +setScore(score:Integer)
+    }
+
+    class ReaderCSV
+    {
+        -path:String
+        +ReaderCSV()
+        +generateDominos():Domino[*]
+    }
+
+    class Tile
+    {
+        - crowns : Integer
+        +Tile(biome:Biome, crowns:Integer)
+        +toString():String
+        +getBiome():Biome
+        +getCrowns():Integer
+        +getCrownsAsString():String
+    }
+
+    interface GameConstraints <<interface>>
+    {
+    }
+
+    class Harmony implements GameConstraints
+    {
+        - rules : String
+    }
+
+    class MiddleEmpire implements GameConstraints
+    {
+        - rules : String
+    }
+
+    class Wallet extends Observable
+    {
+        -size:Integer
+        +Wallet(size:Integer)
+        +getSize():Integer
+        +getDominos():Domino[*]
+        +declareAsUsed(domino:Domino)
+        +hasBeenUsedAlready(domino:Domino):boolean
+        +clearUsedDomino()
+    }
+}
+
+package controller
+{
+    class App
+    {
+        + {static} main(String[*]) : void
+    }
+}
+
+Domino *-> Tile : > tiles[*]
+Game *-> "1" Domino:  >  deck[*]
+Game *-> "1" Player:  >  players[*]
+Game *-> Player : > newOrder[*]
+Game *-> Board : > board
+Game *-> Wallet:  >  wallet
+Game *-> IObserver
+Kingdom *-> Tile:  >  grid[*]
+ParametersGUI *-> "1" Player:  >  players[*]
+Player o-> "1"Kingdom:   kingdom
+Tile *-> "1" Biome:  >  biome
+Wallet *-> Domino :  >  dominos[*]
+Board o-> "1" Domino :  > selectedDomino
+KingdomObserver o-> Kingdom :  > kingdom
+App  .> Game : <<use>>
+Game .> ReaderCSV : <<use>>
+Game .> ParametersGUI : <<use>>
+Player o-> Domino : > lastPlayedDomino
+Wallet *-> Domino : > used[*]
+Kingdom .> Castle : <<use>>
+Kingdom *-> Player : player
+Observable o-> IObserver : > observers[*]
+ParametersGUI .> Constants : <<use>>
+Board .> Constants : <<use>>
+Game .> Constants : <<use>>
+Domino .> Constants : <<use>>
+KingdomObserver .> Constants : <<use>>
+WalletObserver .> Constants : <<use>>
+Tile .> Constants : <<use>>
+@enduml

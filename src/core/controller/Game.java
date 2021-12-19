@@ -1,5 +1,6 @@
-package core.model;
+package core.controller;
 
+import core.model.*;
 import core.view.Board;
 import core.view.KingdomObserver;
 import core.view.WalletObserver;
