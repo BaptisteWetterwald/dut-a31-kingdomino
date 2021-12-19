@@ -22,7 +22,7 @@ public class ParametersGUI extends JFrame {
 
     public ParametersGUI()
     {
-        this.setTitle(Constants.WINDOW_TITLE);
+        this.setTitle("\"Only kings play KingDomino\"");
         this.setSize(1000,500);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         players = new ArrayList<>();

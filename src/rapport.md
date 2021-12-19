@@ -1,4 +1,4 @@
-_Baptiste WETTERWALD - Hamza LOUADA - Gr2_
+_Baptiste WETTERWALD - Hamza LOUADA - Groupe 2_
 
 ## **Rapport A31 - Version 1 (19/12/2021)**
 
@@ -45,10 +45,6 @@ Correspond à une petite pioche de dominos. Sa taille dépend du nombre de joueu
 
 Cette classe nous permet de lire le fichier “.csv” qui nous a été fourni et ainsi d’instancier tous les dominos du jeu.
 
-**Class Constants :**
-
-Contient toutes les constantes que nos classes utilisent. Permet de changer les paramètres du jeu depuis une seule et même classe.
-
 **Interface IObserver :**
 
 Nous avons choisi d’utiliser le design pattern Observer afin de faire réagir les vues au comportement d’autres objets.
@@ -69,6 +65,10 @@ C’est une classe abstraite, superclasse de tous les objets pouvant être obser
 
 Gère l’affichage du plateau de jeu complet : il contient le Wallet, les Kingdoms et la sélection/modification du domino avant placement dans l’un des Kingdoms.
 
+**Class ParametersGUI :**
+
+Avant de démarrer la partie, l'utilisateur choisit le nombre de joueurs et leur attribue à chacun un pseudo.
+
 ### **Notre exécutable :**
 Notre exécutable est un fichier .JAR contenant à la fois nos classes compilées et le fichier CSV permettant d’instancier nos différents dominos.
 Il suffit de le lancer (java -jar a31-kingdomino-fork) pour que l’application démarre.
@@ -83,3 +83,4 @@ Pour l’instant, le calcul du score s’effectue à la fin du tour de chaque jo
 - Le calcul du score avec les variantes.
 - L’affichage des scores à la fin.
 - La vérification pour la variante Harmonie : toutes les cases utilisées ou non.
+- La vérification pour la variante Empire du Milieu : Castle au milieu ou non.

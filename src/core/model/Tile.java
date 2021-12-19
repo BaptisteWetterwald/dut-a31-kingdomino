@@ -32,7 +32,7 @@ public class Tile
         String s = "";
         for (int i=0; i<this.crowns; i++)
         {
-            s += Constants.CROWN_SYMBOL;
+            s += "\uD83D\uDC51";
             if (i < this.crowns-1)
                 s += " ";
         }

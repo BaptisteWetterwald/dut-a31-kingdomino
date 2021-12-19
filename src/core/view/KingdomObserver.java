@@ -51,7 +51,7 @@ public class KingdomObserver extends JFrame implements IObserver
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         board.addKingdomPanel(columnPanel);
         //columnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        columnPanel.setBorder(new EmptyBorder(Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING));
+        columnPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
 
         JButton skipTurnButton = board.getSkipTurnButton();
         skipTurnButton.addActionListener(e -> player.getKingdom().placeDomino(board.getSelectedDomino(), player));
@@ -67,7 +67,7 @@ public class KingdomObserver extends JFrame implements IObserver
             for (int j=0; j<gridWidth; j++)
             {
                 Tile tile = ((Kingdom)object).getGrid()[i][j];
-                buttons[i][j].setBackground(tile != null ? tile.getBiome().getColor() : Constants.KINGDOM_COLOR_MISSING_TILE);
+                buttons[i][j].setBackground(tile != null ? tile.getBiome().getColor() : Color.WHITE);
                 buttons[i][j].setEnabled(kingdom.isModifiable());
                 buttons[i][j].setText(tile != null ? tile.getCrownsAsString() : "");
             }

@@ -63,44 +63,19 @@ package model
         +Castle()
     }
 
-    class Constants
-    {
-        {static} + CROWN_SYMBOL : String
-        {static} + FLIP_180 : String
-        {static} + FLIP_LEFT : String
-        {static} + FLIP_RIGHT : String
-        {static} + KINGDOM_PADDING : Integer
-        {static} + WIDTH_KINGDOM_NORMAL : Integer
-        {static} + HEIGHT_KINGDOM_NORMAL : Integer
-        {static} + WINDOW_TITLE : String
-    }
-
     class Domino
     {
-    +Domino(id:Integer, t1:Tile, t2:Tile )
-    -id:Integer
-    -horizontal:boolean
-    +getId():Integer
-    +getTiles():Tile[*]
-    +toString():String
-    +flipRight()
-    +flip180()
-    +flipLeft()
-    +switchTiles()
-    +isHorizontal():boolean
-}
-
-    class Game
-    {
-        +Game()
-        +turnOf(p:Player)
-        +print(deck:Domino)
-        +getHeightGrid():Integer
-        +getWidthGrid():Integer
-        -nextRound()
-        -gameprogress()
-        -quickSetup()
-        -slowSetup()
+        +Domino(id:Integer, t1:Tile, t2:Tile)
+        -id:Integer
+        -horizontal:boolean
+        +getId():Integer
+        +getTiles():Tile[*]
+        +toString():String
+        +flipRight()
+        +flip180()
+        +flipLeft()
+        +switchTiles()
+        +isHorizontal():boolean
     }
 
     class Kingdom extends Observable
@@ -147,7 +122,6 @@ package model
 
     class CSVReader
     {
-        -path:String
         +CSVReader()
         +generateDominos():Domino[*]
     }
@@ -160,20 +134,6 @@ package model
         +getBiome():Biome
         +getCrowns():Integer
         +getCrownsAsString():String
-    }
-
-    interface GameConstraints <<interface>>
-    {
-    }
-
-    class Harmony implements GameConstraints
-    {
-        - rules : String
-    }
-
-    class MiddleEmpire implements GameConstraints
-    {
-        - rules : String
     }
 
     class Wallet extends Observable
@@ -194,35 +154,43 @@ package controller
     {
         + {static} main(String[*]) : void
     }
+
+    class Game
+    {
+        +Game()
+        +turnOf(p:Player)
+        +print(deck:Domino)
+        -nextRound()
+        -gameprogress()
+        -quickSetup()
+        -slowSetup()
+    }
+
 }
 
-Domino *-> Tile : > tiles[*]
-Game *-> "1" Domino:  >  deck[*]
-Game *-> "1" Player:  >  players[*]
-Game *-> Player : > newOrder[*]
-Game *-> Board : > board
-Game *-> Wallet:  >  wallet
-Game *-> IObserver
-Kingdom *-> Tile:  >  grid[*]
-ParametersGUI *-> "1" Player:  >  players[*]
-Player o-> "1"Kingdom:   kingdom
-Tile *-> "1" Biome:  >  biome
-Wallet *-> Domino :  >  dominos[*]
-Board o-> "1" Domino :  > selectedDomino
-KingdomObserver o-> Kingdom :  > kingdom
-App  .> Game : <<use>>
-Game .> CSVReader : <<use>>
-Game .> ParametersGUI : <<use>>
-Player o-> Domino : > lastPlayedDomino
-Wallet *-> Domino : > used[*]
-Kingdom .> Castle : <<use>>
-Kingdom *-> Player : player
-Observable o-> IObserver : > observers[*]
-ParametersGUI .> Constants : <<use>>
-Board .> Constants : <<use>>
-Game .> Constants : <<use>>
-Domino .> Constants : <<use>>
-KingdomObserver .> Constants : <<use>>
-WalletObserver .> Constants : <<use>>
-Tile .> Constants : <<use>>
+Domino *--> Tile : > tiles[*]
+Game *--> "1" Domino:  >  deck[*]
+Game *--> "1" Player:  >  players[*]
+Game *--> Player : > newOrder[*]
+Game *--> Board : > board
+Game *--> Wallet:  >  wallet
+Game *--> IObserver
+Kingdom *--> Tile:  >  grid[*]
+ParametersGUI *--> "1" Player:  >  players[*]
+Player o--> "1"Kingdom:   kingdom
+Tile *--> "1" Biome:  >  biome
+Wallet *--> Domino :  >  dominos[*]
+Board o--> "1" Domino :  > selectedDomino
+App  ..> Game : <<use>>
+Game ..> CSVReader : <<use>>
+Game ..> ParametersGUI : <<use>>
+Player o--> Domino : > lastPlayedDomino
+Wallet *--> Domino : > used[*]
+Kingdom ..> Castle : <<use>>
+Observable o--> IObserver : > observers[*]
+KingdomObserver .> Board : <<use>>
+KingdomObserver .> Player : <<use>>
+WalletObserver .> Wallet : <<use>>
+WalletObserver .> Board : <<use>>
+
 @enduml

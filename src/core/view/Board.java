@@ -1,6 +1,5 @@
 package core.view;
 
-import core.model.Constants;
 import core.model.Domino;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ public class Board extends JFrame
 
     public Board()
     {
-        this.setTitle(Constants.WINDOW_TITLE);
+        this.setTitle("\"Only kings play KingDomino\"");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
@@ -64,7 +63,7 @@ public class Board extends JFrame
         flipDominoPanel.setLayout(new BoxLayout(flipDominoPanel, BoxLayout.X_AXIS));
 
         JButton[] buttonsFlip = new JButton[3];
-        buttonsFlip[0] = new JButton(Constants.FLIP_LEFT);
+        buttonsFlip[0] = new JButton("↶");
         buttonsFlip[0].addActionListener(e -> {
             selectedDomino.flipLeft();
             //selectedDominoPanel.setLayout(selectedDomino.isHorizontal() ? horizontalLayout : verticalLayout);
@@ -72,14 +71,14 @@ public class Board extends JFrame
             //System.out.println("Flipped to left. Tile 0 : " + selectedDomino.getTiles()[0].getBiome() + ", tile 1 : " + selectedDomino.getTiles()[1].getBiome());
         });
 
-        buttonsFlip[1] = new JButton(Constants.FLIP_180);
+        buttonsFlip[1] = new JButton("\uD83D\uDDD8");
         buttonsFlip[1].addActionListener(e -> {
             selectedDomino.flip180();
             paintButtons(selectedDomino);
             //System.out.println("Flipped 180°. Tile 0 : " + selectedDomino.getTiles()[0].getBiome() + ", tile 1 : " + selectedDomino.getTiles()[1].getBiome());
         });
 
-        buttonsFlip[2] = new JButton(Constants.FLIP_RIGHT);
+        buttonsFlip[2] = new JButton("↷");
         buttonsFlip[2].addActionListener(e -> {
             selectedDomino.flipRight();
             //selectedDominoPanel.setLayout(selectedDomino.isHorizontal() ? horizontalLayout : verticalLayout);
@@ -133,7 +132,7 @@ public class Board extends JFrame
         modifyDominoPanel.setLayout(new BoxLayout(modifyDominoPanel, BoxLayout.Y_AXIS));
         modifyDominoPanel.add(selectedDominoPanel);
         modifyDominoPanel.add(flipDominoPanel);
-        modifyDominoPanel.setBorder(new EmptyBorder(Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING));
+        modifyDominoPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
 
         /*modifyDominoPanel.setLayout(new GridLayout(2, 1));
         modifyDominoPanel.add(selectedDominoPanel);

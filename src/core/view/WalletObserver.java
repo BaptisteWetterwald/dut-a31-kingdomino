@@ -1,13 +1,11 @@
 package core.view;
 
-import core.model.Constants;
 import core.model.Tile;
 import core.model.Wallet;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.util.HashMap;
 
@@ -28,7 +26,7 @@ public class WalletObserver extends JFrame implements IObserver
             dominosPanel[i] = new JPanel();
             dominosPanel[i].setLayout(new GridLayout(1, 2));
             //dominosPanel[i].setBorder(new EmptyBorder(50, 10, 50, 10));
-            dominosPanel[i].setBorder(new EmptyBorder(Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING, Constants.KINGDOM_PADDING));
+            dominosPanel[i].setBorder(new EmptyBorder(12, 12, 12, 12));
             JButton[] buttons = new JButton[2];
             buttons[0] = new JButton();
             buttons[1] = new JButton();

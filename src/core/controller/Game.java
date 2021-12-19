@@ -38,7 +38,7 @@ public class Game
 
         for (Player p : this.players)
         {
-            p.setKingdom(new Kingdom(this.getHeightGrid(), this.getWidthGrid()));
+            p.setKingdom(new Kingdom(5, 5));
         }
         board = new Board();
         WalletObserver walletObserver = new WalletObserver(wallet, board);
@@ -161,16 +161,6 @@ public class Game
 
         wallet.declareAsUsed(p.getLastPlayedDomino());
         wallet.notifyObservers();
-    }
-
-    int getHeightGrid()
-    {
-        return Constants.HEIGHT_KINGDOM_NORMAL;
-    }
-
-    int getWidthGrid()
-    {
-        return Constants.WIDTH_KINGDOM_NORMAL;
     }
 
 }
