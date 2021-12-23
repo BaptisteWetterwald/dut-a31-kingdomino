@@ -105,7 +105,7 @@ public class ParametersGUI extends JFrame {
         });
 
         middleEmpireMode.addActionListener(e -> {
-            gameConstraint[1]= middleEmpireMode.isSelected();
+            gameConstraint[0]= middleEmpireMode.isSelected();
                 //print(gameConstraint);
         });
 
