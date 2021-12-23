@@ -19,6 +19,7 @@ public class ParametersGUI extends JFrame {
     JTextField txt;
     JButton go = new JButton("Let's gooooo !");
     List<Player> players;
+    boolean [] gameConstraint= new boolean[2];
 
     public ParametersGUI()
     {
@@ -97,10 +98,28 @@ public class ParametersGUI extends JFrame {
         this.setContentPane(bigPanel);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-    }
 
+        harmonyMode.addActionListener(e -> {
+            gameConstraint[1]= harmonyMode.isSelected();
+            //print(gameConstraint);
+        });
+
+        middleEmpireMode.addActionListener(e -> {
+            gameConstraint[1]= middleEmpireMode.isSelected();
+                //print(gameConstraint);
+        });
+
+    }
     public List<Player> getPlayers()
     {
         return this.players;
+    }
+
+    private void print(boolean[] tb)
+    {
+        for(int i=0;i<tb.length;i++)
+        {
+            System.out.println(i+" : " +tb[i]);
+        }
     }
 }
