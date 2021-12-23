@@ -41,12 +41,47 @@ public class KingdomObserver extends JFrame implements IObserver
                 gridPanel.add(b);
             }
         }
-        columnPanel.add(gridPanel);
+
+        JPanel kingdomGridWithButtons = new JPanel();
+        kingdomGridWithButtons.setLayout(new BorderLayout());
+        JButton left = new JButton("◀");
+        JButton up = new JButton("▲");
+        JButton right = new JButton("▶");
+        JButton down = new JButton("▼");
+
+        JPanel leftPanel = new JPanel();
+        leftPanel.add(left);
+        leftPanel.setPreferredSize(new Dimension(30, 30));
+        kingdomGridWithButtons.add(leftPanel, BorderLayout.WEST);
+        leftPanel.setAlignmentY(CENTER_ALIGNMENT);
+
+        JPanel upPanel = new JPanel();
+        upPanel.add(up);
+        upPanel.setPreferredSize(new Dimension(30, 30));
+        kingdomGridWithButtons.add(upPanel, BorderLayout.NORTH);
+        upPanel.setAlignmentX(CENTER_ALIGNMENT);
+
+        JPanel rightPanel = new JPanel();
+        rightPanel.add(right);
+        rightPanel.setPreferredSize(new Dimension(30, 30));
+        kingdomGridWithButtons.add(rightPanel, BorderLayout.EAST);
+        rightPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        JPanel downPanel = new JPanel();
+        downPanel.add(down);
+        downPanel.setPreferredSize(new Dimension(30, 30));
+        kingdomGridWithButtons.add(downPanel, BorderLayout.SOUTH);
+        downPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        kingdomGridWithButtons.add(gridPanel, BorderLayout.CENTER);
+
+        columnPanel.add(kingdomGridWithButtons);
         label = new JLabel();
         label.setFont(new Font(Font.SERIF, Font.BOLD, 20));
         label.setText("Kingdom of " + player + " [0]");
         columnPanel.add(label);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         board.addKingdomPanel(columnPanel);
         //columnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         columnPanel.setBorder(new EmptyBorder(12, 12, 12, 12));

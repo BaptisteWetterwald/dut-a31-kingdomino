@@ -17,19 +17,19 @@ public class Game
     private Player[] newOrder;
     private final Board board;
     private final Wallet wallet;
+    private boolean[] gameConstraints;
 
     public Game()
     {
         players = new ArrayList<>();
-
-        //quickSetup();
-        slowSetup();
+        quickSetup();
+        //slowSetup();
 
         int nbPlayers = this.players.size();
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
         CSVReader reader = new CSVReader();
         List<Domino> allDominos = reader.generateDominos();
-        while (deck.size() < nbPlayers * 12)
+        while (deck.size() < 12) //deck.size() < nbPlayers * 12
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));
@@ -53,6 +53,7 @@ public class Game
         players.add(new Player("Baptou"));
         players.add(new Player("Hamzouz"));
         players.add(new Player("JuL"));
+        this.gameConstraints = new boolean[]{true, true};
     }
 
     private void slowSetup()
@@ -70,6 +71,8 @@ public class Game
             }
         }
         this.players.addAll(parameters.getPlayers());
+        this.gameConstraints = parameters.getGameConstraints();
+
         parameters.dispose();
     }
 
@@ -111,8 +114,22 @@ public class Game
             }
         }
 
-        System.out.println("Adèle said \"This is the end... of the game!\"");
+        for (Player p : players)
+        {
+            if (gameConstraints[0] && p.getKingdom().respectsMiddleKingdom())
+            {
+                p.setScore(p.getKingdom().getScore() + 10);
+                p.getKingdom().notifyObservers();
+            }
+            if (gameConstraints[1] && p.getKingdom().respectsHarmony())
+            {
+                p.setScore(p.getKingdom().getScore() + 5);
+                p.getKingdom().notifyObservers();
+            }
+        }
 
+        board.displayEndScreen(players, gameConstraints);
+        System.out.println("Adèle said \"This is the end... of the game!\"");
     }
 
     private void nextRound()

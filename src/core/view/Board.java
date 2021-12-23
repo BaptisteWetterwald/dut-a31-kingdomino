@@ -1,12 +1,15 @@
 package core.view;
 
 import core.model.Domino;
+import core.model.Player;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
+import java.util.Comparator;
+import java.util.List;
 
 public class Board extends JFrame
 {
@@ -18,6 +21,7 @@ public class Board extends JFrame
     private final JPanel modifyDominoPanel;
     private final JButton skipTurnButton;
     private final JLabel instructionsTitleLabel;
+    private final JPanel instructionsAndModifyPanel;
 
     public Board()
     {
@@ -29,9 +33,9 @@ public class Board extends JFrame
         clickedTileIndex = -1;
         kingdomsGridPanel = new JPanel();
         kingdomsGridPanel.setLayout(new GridLayout(0, 2));
+
         JPanel selectedDominoPanel = new JPanel();
         selectedDominoPanel.setLayout(new GridLayout(2, 2));
-        //selectedDominoPanel.setBorder(new LineBorder(Color.MAGENTA, 2));
         selectedDominoButtons = new JButton[2][2];
         for (int i=0; i<selectedDominoButtons.length; i++)
         {
@@ -75,15 +79,12 @@ public class Board extends JFrame
         buttonsFlip[1].addActionListener(e -> {
             selectedDomino.flip180();
             paintButtons(selectedDomino);
-            //System.out.println("Flipped 180°. Tile 0 : " + selectedDomino.getTiles()[0].getBiome() + ", tile 1 : " + selectedDomino.getTiles()[1].getBiome());
         });
 
         buttonsFlip[2] = new JButton("↷");
         buttonsFlip[2].addActionListener(e -> {
             selectedDomino.flipRight();
-            //selectedDominoPanel.setLayout(selectedDomino.isHorizontal() ? horizontalLayout : verticalLayout);
             paintButtons(selectedDomino);
-            //System.out.println("Flipped to right. Tile 0 : " + selectedDomino.getTiles()[0].getBiome() + ", tile 1 : " + selectedDomino.getTiles()[1].getBiome());
         });
 
         Font font = new Font(Font.SERIF, Font.BOLD, 40);
@@ -133,6 +134,7 @@ public class Board extends JFrame
         modifyDominoPanel.add(selectedDominoPanel);
         modifyDominoPanel.add(flipDominoPanel);
         modifyDominoPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
+        modifyDominoPanel.setVisible(false);
 
         /*modifyDominoPanel.setLayout(new GridLayout(2, 1));
         modifyDominoPanel.add(selectedDominoPanel);
@@ -152,7 +154,7 @@ public class Board extends JFrame
 
         //modifyDominoPanel.setBorder(new LineBorder(Color.BLACK, 2));
 
-        JPanel instructionsAndModifyPanel = new JPanel();
+        instructionsAndModifyPanel = new JPanel();
         instructionsAndModifyPanel.setLayout(new GridLayout(2, 1));
         instructionsAndModifyPanel.add(modifyDominoPanel);
         instructionsAndModifyPanel.add(instructionsPanel);
@@ -182,7 +184,10 @@ public class Board extends JFrame
 
     public void addKingdomPanel(JPanel panel)
     {
+
+
         this.kingdomsGridPanel.add(panel);
+
     }
 
     public void addWalletPanel(JPanel panel)
@@ -205,9 +210,11 @@ public class Board extends JFrame
             selectedDominoButtons[0][0].setVisible(false);
             selectedDominoButtons[0][1].setVisible(false);
             selectedDominoButtons[1][0].setVisible(false);
+            modifyDominoPanel.setVisible(false);
         }
         else
         {
+            modifyDominoPanel.setVisible(true);
             selectedDominoButtons[0][0].setVisible(true);
             selectedDominoButtons[0][0].setBackground(domino.getTiles()[0].getBiome().getColor());
             selectedDominoButtons[0][0].setText(domino.getTiles()[0].getCrownsAsString());
@@ -248,4 +255,42 @@ public class Board extends JFrame
         return skipTurnButton;
     }
 
+    public void displayEndScreen(List<Player> players, boolean[] gameConstraints)
+    {
+        instructionsAndModifyPanel.removeAll();
+        instructionsAndModifyPanel.setLayout(new GridLayout(players.size(), 1));
+        players.sort(Comparator.comparingInt(Player::getScore).reversed());
+        for (int i = 0; i < players.size(); i++)
+        {
+            Player p = players.get(i);
+            JPanel playerStats = new JPanel();
+            playerStats.setLayout(new BoxLayout(playerStats, BoxLayout.Y_AXIS));
+            JLabel name = new JLabel("#" + (i+1) + " - " + p);
+            name.setFont(new Font(Font.SERIF, Font.BOLD, 60));
+            playerStats.add(name);
+            JLabel score = new JLabel(p.getScore() + " points");
+            score.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+            playerStats.add(score);
+            if (gameConstraints[0]) //MiddleKingdom
+            {
+                JLabel middleKingdom = new JLabel("MiddleKingdom:" + (p.getKingdom().respectsMiddleKingdom() ? "✓" : "✗"));
+                middleKingdom.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+                playerStats.add(middleKingdom);
+            }
+            if (gameConstraints[1]) //Harmony
+            {
+                JLabel harmony = new JLabel("Harmony:" + (p.getKingdom().respectsHarmony() ? "✓" : "✗"));
+                harmony.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+                playerStats.add(harmony);
+            }
+            playerStats.setBorder(new EmptyBorder(15, 15, 15, 15));
+            instructionsAndModifyPanel.add(playerStats);
+            playerStats.setAlignmentX(Component.CENTER_ALIGNMENT);
+        }
+        /*rightPanel.remove(1);
+        String s = "";
+        JLabel pixelArt = new JLabel(s);
+        pixelArt.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
+        rightPanel.add(pixelArt);*/
+    }
 }

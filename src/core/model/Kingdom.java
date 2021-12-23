@@ -152,6 +152,27 @@ public class Kingdom extends Observable
         return score;
     }
 
+    public boolean respectsMiddleKingdom()
+    {
+        int line = grid.length/2;
+        int column = grid[0].length/2;
+        return grid[line][column] != null && grid[line][column].getBiome() == Biome.CASTLE;
+    }
+
+    public boolean respectsHarmony()
+    {
+        boolean foundEmpty = false;
+        for (int i = 0; i < grid.length && !foundEmpty; i++)
+        {
+            for (int j = 0; j < grid[0].length && !foundEmpty; j++)
+            {
+                if (grid[i][j] == null)
+                    foundEmpty = true;
+            }
+        }
+        return !foundEmpty;
+    }
+
     private void fillTerrainOfTile(List<Tile> terrain, int[] untreated)
     {
         int l = untreated[0];
