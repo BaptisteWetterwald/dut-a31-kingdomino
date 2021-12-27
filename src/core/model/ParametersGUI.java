@@ -8,21 +8,26 @@ import java.util.List;
 
 public class ParametersGUI extends JFrame {
 
-    private final JPanel names;
-    private JLabel label;
-    private JTextField txt;
-    private final JButton go = new JButton("Let's gooooo !");
-    private final List<Player> players;
-    private final boolean[] gameConstraints;
+    JPanel panel;
+    JPanel bigPanel;
+    JPanel nbPlayersSelection;
+    JPanel modeSelection;
+    JPanel names;
+    JCheckBox harmonyMode;
+    JCheckBox middleEmpireMode;
+    JLabel label;
+    JTextField txt;
+    JButton go = new JButton("Let's gooooo !");
+    List<Player> players;
+    boolean [] gameConstraint= new boolean[2];
 
     public ParametersGUI()
     {
         this.setTitle("\"Only kings play KingDomino\"");
         this.setSize(1000,500);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        gameConstraints = new boolean[2];
         players = new ArrayList<>();
-        JPanel nbPlayersSelection = new JPanel();
+        nbPlayersSelection = new JPanel();
         Border nbPlayers = BorderFactory.createTitledBorder("How many players:");
         nbPlayersSelection.setBorder(nbPlayers);
         nbPlayersSelection.setLayout(new BoxLayout(nbPlayersSelection, BoxLayout.Y_AXIS));
@@ -36,19 +41,19 @@ public class ParametersGUI extends JFrame {
             nbPlayersSelection.add(buttons[i]);
             group.add(buttons[i]);
         }
-        JPanel modeSelection = new JPanel();
+        modeSelection = new JPanel();
         Border mode = BorderFactory.createTitledBorder("Choose a game mode:");
         modeSelection.setBorder(mode);
-        JCheckBox harmonyMode = new JCheckBox("Harmony");
-        JCheckBox middleEmpireMode = new JCheckBox("Middle Empire");
+        harmonyMode = new JCheckBox("Harmony");
+        middleEmpireMode = new JCheckBox("Middle Empire");
         modeSelection.add(harmonyMode);
         modeSelection.add(middleEmpireMode);
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.setLayout(new GridLayout(2,0));
         panel.add(nbPlayersSelection);
         panel.add(modeSelection);
 
-        JPanel bigPanel = new JPanel();
+        bigPanel = new JPanel();
         bigPanel.setLayout(new GridLayout(0,2));
         names = new JPanel();
         names.setLayout(new GridLayout(12,0));
@@ -81,30 +86,40 @@ public class ParametersGUI extends JFrame {
         }
 
         go.addActionListener(e -> {
-            players.clear();
-            for (Component r : names.getComponents())
-            {
+            players = new ArrayList<>();
+            for (Component r : names.getComponents()) {
                 if (r instanceof JTextField)
                 {
                     players.add(new Player(((JTextField) r).getText()));
                 }
             }
-            gameConstraints[0] = true;
-            gameConstraints[1] = true;
         });
 
         this.setContentPane(bigPanel);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-    }
 
+        harmonyMode.addActionListener(e -> {
+            gameConstraint[1]= harmonyMode.isSelected();
+            //print(gameConstraint);
+        });
+
+        middleEmpireMode.addActionListener(e -> {
+            gameConstraint[0]= middleEmpireMode.isSelected();
+                //print(gameConstraint);
+        });
+
+    }
     public List<Player> getPlayers()
     {
         return this.players;
     }
 
-    public boolean[] getGameConstraints()
+    private void print(boolean[] tb)
     {
-        return gameConstraints;
+        for(int i=0;i<tb.length;i++)
+        {
+            System.out.println(i+" : " +tb[i]);
+        }
     }
 }

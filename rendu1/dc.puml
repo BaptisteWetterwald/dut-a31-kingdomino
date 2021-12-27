@@ -6,13 +6,6 @@ hide enum methods
 
 package view
 {
-    abstract class Observable <<abstract>>
-    {
-        +Observable()
-        +notifyObservers()
-        +addObserver(observer:IObserver)
-    }
-
     class KingdomObserver implements IObserver
     {
         -gridWidth:Integer
@@ -94,6 +87,13 @@ package model
         -addNeighbor(neighbors:Integer[*], terrain:Tile[*],
         l:Integer, c:Integer, l2:Integer, c2:Integer)
         -getFirstUntreatedTile(terrains:Tile[*]):Integer[*]
+    }
+
+    abstract class Observable <<abstract>>
+    {
+        +Observable()
+        +notifyObservers()
+        +addObserver(observer:IObserver)
     }
 
     class ParametersGUI
