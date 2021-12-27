@@ -5,20 +5,22 @@ import core.model.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class KingdomObserver extends JFrame implements IObserver
 {
     private final JButton[][] buttons;
     private final int gridWidth;
     private final int gridHeight;
-    private final Kingdom kingdom;
     private final JLabel label;
     private final Player player;
+    private final JPanel slideElementsPanel;
 
     public KingdomObserver(Board board, Player player)
     {
         this.player = player;
-        kingdom = player.getKingdom();
+        Kingdom kingdom = player.getKingdom();
         gridHeight = kingdom.getGrid().length;
         gridWidth = kingdom.getGrid()[0].length;
         buttons = new JButton[gridWidth][gridHeight];
@@ -43,37 +45,38 @@ public class KingdomObserver extends JFrame implements IObserver
         }
 
         JPanel kingdomGridWithButtons = new JPanel();
-        kingdomGridWithButtons.setLayout(new BorderLayout());
-        JButton left = new JButton("◀");
-        JButton up = new JButton("▲");
-        JButton right = new JButton("▶");
-        JButton down = new JButton("▼");
+        kingdomGridWithButtons.setLayout(new BoxLayout(kingdomGridWithButtons, BoxLayout.Y_AXIS));
+        slideElementsPanel = new JPanel();
+        slideElementsPanel.setLayout(new BoxLayout(slideElementsPanel, BoxLayout.X_AXIS));
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.add(left);
-        leftPanel.setPreferredSize(new Dimension(30, 30));
-        kingdomGridWithButtons.add(leftPanel, BorderLayout.WEST);
-        leftPanel.setAlignmentY(CENTER_ALIGNMENT);
+        for (int i=0; i<4; i++)
+        {
+            String s = "";
+            switch(i)
+            {
+                case 0:
+                    s = "◀";
+                    break;
+                case 1:
+                    s = "▲";
+                    break;
+                case 2:
+                    s = "▼";
+                    break;
+                case 3:
+                    s = "▶";
+            }
+            JButton b = new JButton(s);
+            int finalI = i;
+            b.addActionListener(e -> {
+                player.getKingdom().slideGridElements(finalI);
+            });
+            b.setFocusable(false);
+            slideElementsPanel.add(b);
+        }
 
-        JPanel upPanel = new JPanel();
-        upPanel.add(up);
-        upPanel.setPreferredSize(new Dimension(30, 30));
-        kingdomGridWithButtons.add(upPanel, BorderLayout.NORTH);
-        upPanel.setAlignmentX(CENTER_ALIGNMENT);
-
-        JPanel rightPanel = new JPanel();
-        rightPanel.add(right);
-        rightPanel.setPreferredSize(new Dimension(30, 30));
-        kingdomGridWithButtons.add(rightPanel, BorderLayout.EAST);
-        rightPanel.setAlignmentY(Component.CENTER_ALIGNMENT);
-
-        JPanel downPanel = new JPanel();
-        downPanel.add(down);
-        downPanel.setPreferredSize(new Dimension(30, 30));
-        kingdomGridWithButtons.add(downPanel, BorderLayout.SOUTH);
-        downPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        kingdomGridWithButtons.add(gridPanel, BorderLayout.CENTER);
+        kingdomGridWithButtons.add(slideElementsPanel);
+        kingdomGridWithButtons.add(gridPanel);
 
         columnPanel.add(kingdomGridWithButtons);
         label = new JLabel();
@@ -101,10 +104,12 @@ public class KingdomObserver extends JFrame implements IObserver
             {
                 Tile tile = ((Kingdom)object).getGrid()[i][j];
                 buttons[i][j].setBackground(tile != null ? tile.getBiome().getColor() : Color.WHITE);
-                buttons[i][j].setEnabled(kingdom.isModifiable());
+                buttons[i][j].setEnabled(player.getKingdom().isModifiable());
                 buttons[i][j].setText(tile != null ? tile.getCrownsAsString() : "");
             }
         }
         label.setText("Kingdom of " + player + " [" + player.getScore() + "]");
+        for (Component c : slideElementsPanel.getComponents())
+            c.setEnabled(player.getKingdom().isModifiable());
     }
 }
