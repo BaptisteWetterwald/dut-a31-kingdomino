@@ -13,7 +13,7 @@ public class Game
     Random random = new Random();
 
     private final List<Domino> deck = new ArrayList<>();
-    private final List<Player> players;
+    private final List<Player> players = new ArrayList<>();
     private Player[] newOrder;
     private final Board board;
     private final Wallet wallet;
@@ -21,15 +21,14 @@ public class Game
 
     public Game()
     {
-        players = new ArrayList<>();
-        quickSetup();
-        //slowSetup();
+        //quickSetup();
+        slowSetup();
 
         int nbPlayers = this.players.size();
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
         CSVReader reader = new CSVReader();
         List<Domino> allDominos = reader.generateDominos();
-        while (deck.size() < 12) //deck.size() < nbPlayers * 12
+        while (deck.size() < nbPlayers * 12)
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));
@@ -40,7 +39,7 @@ public class Game
         {
             p.setKingdom(new Kingdom(5, 5));
         }
-        board = new Board();
+        board = new Board(players.size());
         WalletObserver walletObserver = new WalletObserver(wallet, board);
         wallet.addObserver(walletObserver);
         board.setVisible(true);

@@ -23,7 +23,7 @@ public class Board extends JFrame
     private final JLabel instructionsTitleLabel;
     private final JPanel instructionsAndModifyPanel;
 
-    public Board()
+    public Board(int nbPlayers)
     {
         this.setTitle("\"Only kings play KingDomino\"");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -136,33 +136,22 @@ public class Board extends JFrame
         modifyDominoPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
         modifyDominoPanel.setVisible(false);
 
-        /*modifyDominoPanel.setLayout(new GridLayout(2, 1));
-        modifyDominoPanel.add(selectedDominoPanel);
-        modifyDominoPanel.add(flipDominoPanel);*/
-
-        /*modifyDominoPanel.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridheight = 2;
-        constraints.gridwidth = 3;
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        modifyDominoPanel.add(selectedDominoPanel, constraints);
-        constraints.gridheight = GridBagConstraints.REMAINDER;
-        constraints.gridy = 2;
-        modifyDominoPanel.add(flipDominoPanel, constraints);*/
-
-        //modifyDominoPanel.setBorder(new LineBorder(Color.BLACK, 2));
-
         instructionsAndModifyPanel = new JPanel();
         instructionsAndModifyPanel.setLayout(new GridLayout(2, 1));
         instructionsAndModifyPanel.add(modifyDominoPanel);
         instructionsAndModifyPanel.add(instructionsPanel);
-        //instructionsAndModifyPanel.setBorder(new LineBorder(Color.BLACK, 2));
 
         JPanel linePanel = new JPanel();
         linePanel.setLayout(new GridLayout(1, 2));
-        linePanel.add(kingdomsGridPanel);
+        if (nbPlayers == 2)
+        {
+            JPanel kingdomsColumnPanel = new JPanel();
+            kingdomsColumnPanel.setLayout(new GridLayout(2, 1));
+            kingdomsColumnPanel.add(kingdomsGridPanel);
+            linePanel.add(kingdomsColumnPanel);
+        }
+        else
+            linePanel.add(kingdomsGridPanel);
 
         rightPanel = new JPanel();
         rightPanel.setLayout(new GridLayout(1, 2));
@@ -184,10 +173,7 @@ public class Board extends JFrame
 
     public void addKingdomPanel(JPanel panel)
     {
-
-
         this.kingdomsGridPanel.add(panel);
-
     }
 
     public void addWalletPanel(JPanel panel)
