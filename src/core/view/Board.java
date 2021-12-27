@@ -273,6 +273,9 @@ public class Board extends JFrame
             instructionsAndModifyPanel.add(playerStats);
             playerStats.setAlignmentX(Component.CENTER_ALIGNMENT);
         }
+
+        revalidate();
+        repaint();
         /*rightPanel.remove(1);
         String s = "";
         JLabel pixelArt = new JLabel(s);

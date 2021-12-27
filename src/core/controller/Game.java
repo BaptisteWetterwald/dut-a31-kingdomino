@@ -28,7 +28,7 @@ public class Game
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
         CSVReader reader = new CSVReader();
         List<Domino> allDominos = reader.generateDominos();
-        while (deck.size() < nbPlayers * 12)
+        while (deck.size() < 12)
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));
