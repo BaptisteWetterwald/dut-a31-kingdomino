@@ -8,13 +8,11 @@ import java.util.List;
 public class Kingdom extends Observable
 {
     private final Tile[][] grid;
-    private boolean modifiable;
 
     public Kingdom(int height, int width)
     {
         this.grid = new Tile[height][width];
         grid[height/2][width/2] = new Castle();
-        modifiable = false;
         /*
              0 1 2 3 4
            0 x x x x x
@@ -93,17 +91,6 @@ public class Kingdom extends Observable
     {
         p.setPlayed(true);
         p.setLastPlayedDomino(domino);
-        this.notifyObservers();
-    }
-
-    public boolean isModifiable()
-    {
-        return modifiable;
-    }
-
-    public void setModifiable(boolean modifiable)
-    {
-        this.modifiable = modifiable;
         this.notifyObservers();
     }
 
@@ -246,9 +233,9 @@ public class Kingdom extends Observable
         return coords;
     }
 
-    public void slideGridElements(final int direction)
+    public void slideGridElements(final int direction, final boolean hasPlayed)
     {
-        if (this.modifiable)
+        if (!hasPlayed)
         {
             boolean empty = true;
 

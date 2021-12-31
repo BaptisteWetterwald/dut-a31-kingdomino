@@ -3,7 +3,9 @@ package core.view;
 import core.model.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,7 +71,7 @@ public class KingdomObserver extends JFrame implements IObserver
             JButton b = new JButton(s);
             int finalI = i;
             b.addActionListener(e -> {
-                player.getKingdom().slideGridElements(finalI);
+                player.getKingdom().slideGridElements(finalI, player.hasPlayed());
             });
             b.setFocusable(false);
             slideElementsPanel.add(b);
@@ -104,12 +106,12 @@ public class KingdomObserver extends JFrame implements IObserver
             {
                 Tile tile = ((Kingdom)object).getGrid()[i][j];
                 buttons[i][j].setBackground(tile != null ? tile.getBiome().getColor() : Color.WHITE);
-                buttons[i][j].setEnabled(player.getKingdom().isModifiable());
+                buttons[i][j].setEnabled(!player.hasPlayed());
                 buttons[i][j].setText(tile != null ? tile.getCrownsAsString() : "");
             }
         }
         label.setText("Kingdom of " + player + " [" + player.getScore() + "]");
         for (Component c : slideElementsPanel.getComponents())
-            c.setEnabled(player.getKingdom().isModifiable());
+            c.setEnabled(!player.hasPlayed());
     }
 }

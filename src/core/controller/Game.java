@@ -28,7 +28,7 @@ public class Game
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
         CSVReader reader = new CSVReader();
         List<Domino> allDominos = reader.generateDominos();
-        while (deck.size() < 12)
+        while (deck.size() < 12 * nbPlayers)
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));
@@ -115,15 +115,14 @@ public class Game
 
         for (Player p : players)
         {
+            p.setScore(p.getKingdom().getScore());
             if (gameConstraints[0] && p.getKingdom().respectsMiddleKingdom())
             {
-                p.setScore(p.getKingdom().getScore() + 10);
-                p.getKingdom().notifyObservers();
+                p.setScore(p.getScore() + 10);
             }
             if (gameConstraints[1] && p.getKingdom().respectsHarmony())
             {
-                p.setScore(p.getKingdom().getScore() + 5);
-                p.getKingdom().notifyObservers();
+                p.setScore(p.getScore() + 5);
             }
         }
 
@@ -149,8 +148,8 @@ public class Game
     {
         char lastLetter = p.getName().toLowerCase().charAt(p.getName().length()-1);
         board.writeInstructionTitle(p.getName() + (lastLetter != 's' && lastLetter != 'z' ? "'s" : "'") + " turn");
-        p.getKingdom().setModifiable(true);
         p.setPlayed(false);
+        p.getKingdom().notifyObservers();
 
         while(!p.hasPlayed())
         {
@@ -170,7 +169,6 @@ public class Game
         int index = wallet.getDominos().indexOf(p.getLastPlayedDomino());
         newOrder[index] = p;
 
-        p.getKingdom().setModifiable(false);
         board.setSelectedDomino(null);
         board.setClickedTileIndex(-1);
         board.getSkipTurnButton().setVisible(false);
