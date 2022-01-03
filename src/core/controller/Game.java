@@ -18,7 +18,7 @@ public class Game
     private Player[] newOrder;
     private final Board board;
     private final Wallet wallet;
-    private boolean[] gameConstraints;
+    private List<GameConstraint> gameConstraints;
 
     public Game()
     {
@@ -53,7 +53,9 @@ public class Game
         players.add(new Player("Baptou"));
         players.add(new Player("Hamzouz"));
         players.add(new Player("JuL"));
-        this.gameConstraints = new boolean[]{true, true};
+        this.gameConstraints = new ArrayList<>();
+        this.gameConstraints.add(new Harmony());
+        this.gameConstraints.add(new MiddleKingdom());
     }
 
     private void slowSetup()
@@ -117,14 +119,8 @@ public class Game
         for (Player p : players)
         {
             p.setScore(p.getKingdom().getScore());
-            if (gameConstraints[0] && p.getKingdom().respectsMiddleKingdom())
-            {
-                p.setScore(p.getScore() + 10);
-            }
-            if (gameConstraints[1] && p.getKingdom().respectsHarmony())
-            {
-                p.setScore(p.getScore() + 5);
-            }
+            for (GameConstraint gc : gameConstraints)
+                gc.setNewScore(p);
         }
 
         board.displayEndScreen(players, gameConstraints);

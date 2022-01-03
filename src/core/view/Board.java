@@ -1,6 +1,7 @@
 package core.view;
 
 import core.model.Domino;
+import core.model.GameConstraint;
 import core.model.Player;
 
 import javax.swing.*;
@@ -241,7 +242,7 @@ public class Board extends JFrame
         return skipTurnButton;
     }
 
-    public void displayEndScreen(List<Player> players, boolean[] gameConstraints)
+    public void displayEndScreen(List<Player> players, List<GameConstraint> gameConstraints)
     {
         instructionsAndModifyPanel.removeAll();
         instructionsAndModifyPanel.setLayout(new GridLayout(players.size(), 1));
@@ -257,17 +258,11 @@ public class Board extends JFrame
             JLabel score = new JLabel(p.getScore() + " points");
             score.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
             playerStats.add(score);
-            if (gameConstraints[0]) //MiddleKingdom
+            for (GameConstraint gc : gameConstraints)
             {
-                JLabel middleKingdom = new JLabel("MiddleKingdom:" + (p.getKingdom().respectsMiddleKingdom() ? "✓" : "✗"));
-                middleKingdom.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
-                playerStats.add(middleKingdom);
-            }
-            if (gameConstraints[1]) //Harmony
-            {
-                JLabel harmony = new JLabel("Harmony:" + (p.getKingdom().respectsHarmony() ? "✓" : "✗"));
-                harmony.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
-                playerStats.add(harmony);
+                JLabel label = new JLabel(gc.getClass().getSimpleName() + ": " + (gc.respects(p.getKingdom().getGrid()) ? "✓" : "✗"));
+                label.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+                playerStats.add(label);
             }
             playerStats.setBorder(new EmptyBorder(15, 15, 15, 15));
             instructionsAndModifyPanel.add(playerStats);

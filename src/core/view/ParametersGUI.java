@@ -1,5 +1,8 @@
 package core.view;
 
+import core.model.GameConstraint;
+import core.model.Harmony;
+import core.model.MiddleKingdom;
 import core.model.Player;
 
 import javax.swing.*;
@@ -12,12 +15,12 @@ public class ParametersGUI extends JFrame
 {
     private final JPanel names;
     private final JCheckBox harmonyMode;
-    private final JCheckBox middleEmpireMode;
+    private final JCheckBox middleKingdom;
     private JLabel label;
     private JTextField txt;
     private final JButton go = new JButton("Let's gooooo !");
     private final List<Player> players;
-    private final boolean [] gameConstraints = new boolean[2];
+    private final List<GameConstraint> gameConstraints = new ArrayList<>();
 
     public ParametersGUI()
     {
@@ -43,9 +46,9 @@ public class ParametersGUI extends JFrame
         Border mode = BorderFactory.createTitledBorder("Choose a game mode:");
         modeSelection.setBorder(mode);
         harmonyMode = new JCheckBox("Harmony");
-        middleEmpireMode = new JCheckBox("Middle Empire");
+        middleKingdom = new JCheckBox("Middle Empire");
         modeSelection.add(harmonyMode);
-        modeSelection.add(middleEmpireMode);
+        modeSelection.add(middleKingdom);
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2,0));
         panel.add(nbPlayersSelection);
@@ -98,16 +101,26 @@ public class ParametersGUI extends JFrame
         this.setVisible(true);
 
         harmonyMode.addActionListener(e -> {
-            gameConstraints[1]= harmonyMode.isSelected();
-            //print(gameConstraint);
+            if (harmonyMode.isSelected())
+                gameConstraints.add(new Harmony());
+            else
+            {
+                gameConstraints.removeIf(gc -> gc instanceof Harmony);
+            }
         });
 
-        middleEmpireMode.addActionListener(e -> {
-            gameConstraints[0]= middleEmpireMode.isSelected();
-                //print(gameConstraint);
+        middleKingdom.addActionListener(e -> {
+            if (middleKingdom.isSelected())
+                gameConstraints.add(new MiddleKingdom());
+            else
+            {
+                gameConstraints.removeIf(gc -> gc instanceof MiddleKingdom);
+            }
         });
 
     }
+
+
     public List<Player> getPlayers()
     {
         return this.players;
@@ -121,7 +134,7 @@ public class ParametersGUI extends JFrame
         }
     }*/
 
-    public boolean[] getGameConstraints()
+    public List<GameConstraint> getGameConstraints()
     {
         return this.gameConstraints;
     }
