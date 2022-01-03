@@ -8,6 +8,10 @@ import java.util.Scanner;
 
 public class CSVReader
 {
+    
+    private static CSVReader INSTANCE = null;
+
+    private CSVReader(){}
 
     public List<Domino> generateDominos()
     {
@@ -42,5 +46,12 @@ public class CSVReader
         }
 
         return new ArrayList<>(Arrays.asList(tab));
+    }
+
+    public static CSVReader getInstance()
+    {
+        if (INSTANCE == null)
+            INSTANCE = new CSVReader();
+        return INSTANCE;
     }
 }

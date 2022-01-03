@@ -3,6 +3,7 @@ package core.controller;
 import core.model.*;
 import core.view.Board;
 import core.view.KingdomObserver;
+import core.view.ParametersGUI;
 import core.view.WalletObserver;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class Game
 
         int nbPlayers = this.players.size();
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
-        CSVReader reader = new CSVReader();
+        CSVReader reader = CSVReader.getInstance();
         List<Domino> allDominos = reader.generateDominos();
         while (deck.size() < 12 * nbPlayers)
         {

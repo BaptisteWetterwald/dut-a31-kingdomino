@@ -1,4 +1,6 @@
-package core.model;
+package core.view;
+
+import core.model.Player;
 
 import javax.swing.*;
 import javax.swing.border.Border;
