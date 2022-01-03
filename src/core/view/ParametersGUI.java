@@ -89,7 +89,7 @@ public class ParametersGUI extends JFrame
         }
 
         JPanel modeSelection = new JPanel();
-        Border mode = BorderFactory.createTitledBorder("Choose a game mode:");
+        Border mode = BorderFactory.createTitledBorder(roundedLineBorder,"Choose a game mode:");
         modeSelection.setBorder(mode);
         harmonyMode = new JCheckBox("Harmony");
         middleKingdom = new JCheckBox("Middle Empire");
@@ -97,6 +97,7 @@ public class ParametersGUI extends JFrame
         modeSelection.add(middleKingdom);
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(3,0));
+
         try {
             Image img3 = ImageIO.read(img2);
 
