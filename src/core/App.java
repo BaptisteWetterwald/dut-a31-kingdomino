@@ -1,4 +1,6 @@
-package core.controller;
+package core;
+
+import core.controller.Game;
 
 public class App
 {
