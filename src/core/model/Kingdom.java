@@ -115,7 +115,7 @@ public class Kingdom extends Observable
         return res;
     }
 
-    public int getScore()
+    public int calculateScore()
     {
         List<List<Tile>> terrains = new ArrayList<>();
 

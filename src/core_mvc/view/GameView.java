@@ -1,6 +1,8 @@
 package core_mvc.view;
 
+import core_mvc.controller.GameController;
 import core_mvc.model.Domino;
+import core_mvc.model.Game;
 import core_mvc.model.GameConstraint;
 import core_mvc.model.Player;
 
@@ -12,7 +14,7 @@ import java.awt.*;
 import java.util.Comparator;
 import java.util.List;
 
-public class Board extends JFrame
+public class GameView extends JFrame
 {
     private final JPanel kingdomsGridPanel;
     private final JPanel rightPanel;
@@ -24,8 +26,15 @@ public class Board extends JFrame
     private final JLabel instructionsTitleLabel;
     private final JPanel instructionsAndModifyPanel;
 
-    public Board(int nbPlayers)
+    private final Game game;
+    private final GameController controller;
+
+    public GameView(Game game, GameController controller)
     {
+        System.out.println("SCHNECKKKKKK");
+        this.game = game;
+        this.controller = controller;
+
         this.setTitle("\"Only kings play KingDomino\"");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -49,14 +58,14 @@ public class Board extends JFrame
                     selectedDominoButtons[i][j].setBorder(new LineBorder(Color.BLACK, 3));
                     selectedDominoButtons[i][j].setFocusPainted(false);
 
-                    final Board board = this;
+                    final GameView gameView = this;
                     int finalJ = j;
                     int finalI = i;
                     selectedDominoButtons[i][j].addActionListener(e -> {
                         if (finalI == 0 && finalJ == 0)
-                            board.clickedTileIndex = 0;
+                            gameView.clickedTileIndex = 0;
                         else
-                            board.clickedTileIndex = 1;
+                            gameView.clickedTileIndex = 1;
                     });
                     selectedDominoPanel.add(selectedDominoButtons[i][j]);
                 }
@@ -70,21 +79,19 @@ public class Board extends JFrame
         JButton[] buttonsFlip = new JButton[3];
         buttonsFlip[0] = new JButton("↶");
         buttonsFlip[0].addActionListener(e -> {
-            selectedDomino.flipLeft();
-            //selectedDominoPanel.setLayout(selectedDomino.isHorizontal() ? horizontalLayout : verticalLayout);
+            controller.flipLeft(selectedDomino);
             paintButtons(selectedDomino);
-            //System.out.println("Flipped to left. Tile 0 : " + selectedDomino.getTiles()[0].getBiome() + ", tile 1 : " + selectedDomino.getTiles()[1].getBiome());
         });
 
         buttonsFlip[1] = new JButton("\uD83D\uDDD8");
         buttonsFlip[1].addActionListener(e -> {
-            selectedDomino.flip180();
+            controller.flip180(selectedDomino);
             paintButtons(selectedDomino);
         });
 
         buttonsFlip[2] = new JButton("↷");
         buttonsFlip[2].addActionListener(e -> {
-            selectedDomino.flipRight();
+            controller.flipRight(selectedDomino);
             paintButtons(selectedDomino);
         });
 
@@ -144,7 +151,7 @@ public class Board extends JFrame
 
         JPanel linePanel = new JPanel();
         linePanel.setLayout(new GridLayout(1, 2));
-        if (nbPlayers == 2)
+        if (game.getNbPlayers() == 2)
         {
             JPanel kingdomsColumnPanel = new JPanel();
             kingdomsColumnPanel.setLayout(new GridLayout(2, 1));

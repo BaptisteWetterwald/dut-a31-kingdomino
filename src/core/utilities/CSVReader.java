@@ -1,4 +1,8 @@
-package core.model;
+package core.utilities;
+
+import core.model.Biome;
+import core.model.Domino;
+import core.model.Tile;
 
 import java.io.InputStream;
 import java.util.ArrayList;

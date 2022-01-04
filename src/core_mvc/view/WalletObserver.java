@@ -1,5 +1,7 @@
 package core_mvc.view;
 
+import core_mvc.controller.GameController;
+import core_mvc.model.Game;
 import core_mvc.model.Tile;
 import core_mvc.model.Wallet;
 
@@ -7,6 +9,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 public class WalletObserver extends JFrame implements IObserver
@@ -14,7 +18,7 @@ public class WalletObserver extends JFrame implements IObserver
     private final JPanel[] dominosPanel;
     private final HashMap<JPanel, JButton[]> map;
 
-    public WalletObserver(Wallet wallet, Board board)
+    public WalletObserver(Wallet wallet, GameController controller)
     {
         map = new HashMap<>();
         JPanel columnPanel = new JPanel();
@@ -49,10 +53,24 @@ public class WalletObserver extends JFrame implements IObserver
             columnPanel.add(dominosPanel[i]);
 
             int finalI = i;
-            buttons[0].addActionListener(e -> board.setSelectedDomino(wallet.getDominos().get(finalI)));
-            buttons[1].addActionListener(e -> board.setSelectedDomino(wallet.getDominos().get(finalI)));
+            buttons[0].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    controller.setSelectedDomino(wallet.getDominos().get(finalI));
+                    //gameView.setSelectedDomino(wallet.getDominos().get(finalI))
+                }
+            });
+            buttons[1].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    controller.setSelectedDomino(wallet.getDominos().get(finalI));
+                    //gameView.setSelectedDomino(wallet.getDominos().get(finalI))
+                }
+            });
+            //buttons[1].addActionListener(e -> gameView.setSelectedDomino(wallet.getDominos().get(finalI)));
         }
-        board.addWalletPanel(columnPanel);
+        //gameView.addWalletPanel(columnPanel);
+
         this.update(wallet);
     }
 

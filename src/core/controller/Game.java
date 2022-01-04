@@ -1,6 +1,7 @@
 package core.controller;
 
 import core.model.*;
+import core.utilities.CSVReader;
 import core.view.Board;
 import core.view.KingdomObserver;
 import core.view.ParametersGUI;
@@ -118,7 +119,7 @@ public class Game
 
         for (Player p : players)
         {
-            p.setScore(p.getKingdom().getScore());
+            p.setScore(p.getKingdom().calculateScore());
             for (GameConstraint gc : gameConstraints)
                 gc.setNewScore(p);
         }
@@ -160,7 +161,7 @@ public class Game
             }
         }
 
-        p.setScore(p.getKingdom().getScore());
+        p.setScore(p.getKingdom().calculateScore());
         p.getKingdom().notifyObservers();
 
         int index = wallet.getDominos().indexOf(p.getLastPlayedDomino());

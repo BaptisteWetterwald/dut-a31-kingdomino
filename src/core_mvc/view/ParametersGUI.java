@@ -1,5 +1,6 @@
 package core_mvc.view;
 
+import core_mvc.controller.ParametersController;
 import core_mvc.model.GameConstraint;
 import core_mvc.model.Harmony;
 import core_mvc.model.MiddleKingdom;
@@ -8,6 +9,7 @@ import core_mvc.model.Player;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +20,11 @@ public class ParametersGUI extends JFrame
     private final JCheckBox middleKingdom;
     private JLabel label;
     private JTextField txt;
-    private final JButton go = new JButton("Let's gooooo !");
+    private final JButton startButton = new JButton("Let's gooooo !");
     private final List<Player> players;
     private final List<GameConstraint> gameConstraints = new ArrayList<>();
 
-    public ParametersGUI()
+    public ParametersGUI(ParametersController controller)
     {
         this.setTitle("\"Only kings play KingDomino\"");
         this.setSize(1000,500);
@@ -77,7 +79,7 @@ public class ParametersGUI extends JFrame
                             txt.setSize(10,2);
                             names.add(label);
                             names.add(txt);
-                            names.add(go);
+                            names.add(startButton);
                         }
                         revalidate();
                         repaint();
@@ -86,7 +88,7 @@ public class ParametersGUI extends JFrame
             }
         }
 
-        go.addActionListener(e -> {
+        startButton.addActionListener(e -> {
             players.clear();
             for (Component r : names.getComponents()) {
                 if (r instanceof JTextField)
@@ -94,11 +96,14 @@ public class ParametersGUI extends JFrame
                     players.add(new Player(((JTextField) r).getText()));
                 }
             }
+            if (players.size() > 0)
+            {
+                System.out.println("SHOULD START");
+                controller.startGame(players, gameConstraints);
+                this.setVisible(false);
+                this.dispose();
+            }
         });
-
-        this.setContentPane(bigPanel);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
 
         harmonyMode.addActionListener(e -> {
             if (harmonyMode.isSelected())
@@ -118,24 +123,8 @@ public class ParametersGUI extends JFrame
             }
         });
 
-    }
-
-
-    public List<Player> getPlayers()
-    {
-        return this.players;
-    }
-
-    /*private void print(boolean[] tb)
-    {
-        for(int i=0;i<tb.length;i++)
-        {
-            System.out.println(i+" : " +tb[i]);
-        }
-    }*/
-
-    public List<GameConstraint> getGameConstraints()
-    {
-        return this.gameConstraints;
+        this.setContentPane(bigPanel);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 }

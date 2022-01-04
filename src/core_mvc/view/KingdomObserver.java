@@ -1,5 +1,6 @@
 package core_mvc.view;
 
+import core_mvc.controller.GameController;
 import core_mvc.model.Kingdom;
 import core_mvc.model.Player;
 import core_mvc.model.Tile;
@@ -7,8 +8,10 @@ import core_mvc.model.Tile;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class KingdomObserver extends JFrame implements IObserver
+public class KingdomObserver extends JPanel implements IObserver
 {
     private final JButton[][] buttons;
     private final int gridWidth;
@@ -17,7 +20,7 @@ public class KingdomObserver extends JFrame implements IObserver
     private final Player player;
     private final JPanel slideElementsPanel;
 
-    public KingdomObserver(Board board, Player player)
+    public KingdomObserver(Player player, GameController controller)
     {
         this.player = player;
         Kingdom kingdom = player.getKingdom();
@@ -39,7 +42,8 @@ public class KingdomObserver extends JFrame implements IObserver
 
                 int finalI = i;
                 int finalJ = j;
-                b.addActionListener(e -> kingdom.tryDominoPlacement(finalI, finalJ, board.getSelectedDomino(), board.getClickedTileIndex(), player));
+                b.addActionListener(e -> controller.tryDominoPlacement(kingdom, finalI, finalJ, player));
+                //b.addActionListener(e -> kingdom.tryDominoPlacement(finalI, finalJ, gameView.getSelectedDomino(), gameView.getClickedTileIndex(), player));
                 gridPanel.add(b);
             }
         }
@@ -85,13 +89,13 @@ public class KingdomObserver extends JFrame implements IObserver
         columnPanel.add(label);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        board.addKingdomPanel(columnPanel);
+        gameView.addKingdomPanel(columnPanel);
         //columnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         columnPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
 
-        JButton skipTurnButton = board.getSkipTurnButton();
-        skipTurnButton.addActionListener(e -> player.getKingdom().placeDomino(board.getSelectedDomino(), player));
-        board.addSkipTurnButton(skipTurnButton);
+        JButton skipTurnButton = gameView.getSkipTurnButton();
+        skipTurnButton.addActionListener(e -> player.getKingdom().placeDomino(gameView.getSelectedDomino(), player));
+        gameView.addSkipTurnButton(skipTurnButton);
         this.update(kingdom);
     }
 
