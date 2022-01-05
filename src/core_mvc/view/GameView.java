@@ -23,6 +23,7 @@ public class GameView extends JFrame implements IObserver
     private final JLabel instructionsTitleLabel;
     private final JLabel roundCounterLabel;
     private final JPanel instructionsAndModifyPanel;
+    private final JPanel linePanel;
 
     private final Game game;
     private final GameController controller;
@@ -40,6 +41,8 @@ public class GameView extends JFrame implements IObserver
 
     public GameView(Game game, GameController controller)
     {
+        UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
+
         //Début swing pour board de base
         this.game = game;
         this.controller = controller;
@@ -48,8 +51,6 @@ public class GameView extends JFrame implements IObserver
         this.setTitle("\"Only kings play KingDomino\"");
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
 
         JPanel kingdomsGridPanel = new JPanel();
         kingdomsGridPanel.setLayout(new GridLayout(0, 2));
@@ -169,7 +170,7 @@ public class GameView extends JFrame implements IObserver
         instructionsAndModifyPanel.add(modifyDominoPanel);
         instructionsAndModifyPanel.add(instructionsPanel);
 
-        JPanel linePanel = new JPanel();
+        linePanel = new JPanel();
         linePanel.setLayout(new GridLayout(1, 2));
         if (game.getPlayers().size() == 2)
         {
@@ -500,6 +501,7 @@ public class GameView extends JFrame implements IObserver
 
         instructionsAndModifyPanel.removeAll();
         instructionsAndModifyPanel.setLayout(new GridLayout(game.getPlayers().size(), 1));
+        instructionsAndModifyPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         controller.makeLeaderboard();
 
         for (int i=0; i<game.getPlayers().size(); i++)
@@ -519,7 +521,7 @@ public class GameView extends JFrame implements IObserver
                 label.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
                 playerStats.add(label);
             }
-            playerStats.setBorder(new EmptyBorder(15, 15, 15, 15));
+            playerStats.setBorder(new EmptyBorder(15, 40, 15, 15));
             instructionsAndModifyPanel.add(playerStats);
             playerStats.setAlignmentX(Component.CENTER_ALIGNMENT);
         }

@@ -1,7 +1,6 @@
 package core_mvc.model;
 
 import core_mvc.utilities.CSVReader;
-import core_mvc.view.Observable;
 
 import java.util.*;
 
@@ -36,13 +35,12 @@ public class Game extends Observable
         CSVReader reader = CSVReader.getInstance();
         List<Domino> allDominos = reader.generateDominos();
 
-        while (deck.size() < 2 * nbPlayers)
+        while (deck.size() < 12 * nbPlayers)
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));
             allDominos.remove(r);
         }
-        System.out.println("Taille deck = " + deck.size());
 
         this.numberOfRounds = deck.size()/wallet.getSize();
 
@@ -71,7 +69,6 @@ public class Game extends Observable
     private void nextRound()
     {
         this.currentRound++;
-        System.out.println("---------------ROUND " + this.currentRound + "/" + this.numberOfRounds);
         this.playedTurnsInRound = 0;
         wallet.clearUsedDominos();
         wallet.getDominos().clear();
@@ -121,26 +118,21 @@ public class Game extends Observable
         this.selectedDomino = null;
         this.playedTurnsInRound++;
 
-        System.out.println("playedTurnsInRound: " + playedTurnsInRound);
-        System.out.println("Taille deck: " + deck.size());
-
         if (playedTurnsInRound == oldOrder.length) //Everyone has played
         {
             if (currentRound < numberOfRounds)
             {
                 nextRound();
-                System.out.println("BEFORE oldOrder & newOrder switch :\noldOrder:" + Arrays.toString(oldOrder) + "\nnewOrder:" + Arrays.toString(newOrder));
                 for (int i=0; i<newOrder.length; i++)
                 {
                     oldOrder[i] = newOrder[i];
                     newOrder[i] = null;
                 }
                 this.currentPlayer = oldOrder[0];
-                System.out.println("AFTER oldOrder & newOrder switch :\noldOrder:" + Arrays.toString(oldOrder) + "\nnewOrder:" + Arrays.toString(newOrder));
             }
             else
             {
-                System.out.println("Adèle said \"This is the end... of the game!\"");
+                //System.out.println("Adèle said \"This is the end... of the game!\"");
                 this.finished = true;
                 this.calculateFinalScores();
                 for (Player p2 : this.players)

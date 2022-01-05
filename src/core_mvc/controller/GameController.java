@@ -4,9 +4,8 @@ import core_mvc.model.Domino;
 import core_mvc.model.Game;
 import core_mvc.model.Kingdom;
 import core_mvc.model.Player;
-import core_mvc.view.GameView;
-import core_mvc.view.IObserver;
-import core_mvc.view.Observable;
+import core_mvc.model.IObserver;
+import core_mvc.model.Observable;
 
 import java.util.Comparator;
 

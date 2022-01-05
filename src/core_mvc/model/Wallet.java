@@ -1,7 +1,5 @@
 package core_mvc.model;
 
-import core_mvc.view.Observable;
-
 import java.util.ArrayList;
 import java.util.List;
 
