@@ -9,7 +9,6 @@ import core_mvc.model.Player;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +47,7 @@ public class ParametersGUI extends JFrame
         Border mode = BorderFactory.createTitledBorder("Choose a game mode:");
         modeSelection.setBorder(mode);
         harmonyMode = new JCheckBox("Harmony");
-        middleKingdom = new JCheckBox("Middle Empire");
+        middleKingdom = new JCheckBox("MiddleKingdom");
         modeSelection.add(harmonyMode);
         modeSelection.add(middleKingdom);
         JPanel panel = new JPanel();
@@ -98,7 +97,6 @@ public class ParametersGUI extends JFrame
             }
             if (players.size() > 0)
             {
-                System.out.println("SHOULD START");
                 controller.startGame(players, gameConstraints);
                 this.setVisible(false);
                 this.dispose();

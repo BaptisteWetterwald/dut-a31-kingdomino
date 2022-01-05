@@ -189,25 +189,5 @@ public class ParametersGUI extends JFrame
                 gameConstraints.removeIf(gc -> gc instanceof MiddleKingdom);
             }
         });
-
-    }
-
-
-    public List<Player> getPlayers()
-    {
-        return this.players;
-    }
-
-    /*private void print(boolean[] tb)
-    {
-        for(int i=0;i<tb.length;i++)
-        {
-            System.out.println(i+" : " +tb[i]);
-        }
-    }*/
-
-    public List<GameConstraint> getGameConstraints()
-    {
-        return this.gameConstraints;
     }
 }

@@ -21,6 +21,7 @@ public class Game extends Observable
     private int currentRound;
     private final int numberOfRounds;
     private int playedTurnsInRound;
+    private boolean finished = false;
 
     public Game(List<Player> players, List<GameConstraint> gameConstraints)
     {
@@ -140,21 +141,20 @@ public class Game extends Observable
             else
             {
                 System.out.println("Adèle said \"This is the end... of the game!\"");
-                //wallet.getDominos().clear();
-                //wallet.notifyObservers();
-                this.notifyObservers();
+                this.finished = true;
                 this.calculateFinalScores();
+                for (Player p2 : this.players)
+                    p2.getKingdom().notifyObservers();
+                this.notifyObservers();
             }
         }
     }
 
     private void calculateFinalScores()
     {
-        for (Player p : players)
-        {
+        for (Player p : this.players)
             for (GameConstraint gc : gameConstraints)
                 gc.setNewScore(p);
-        }
     }
 
     public List<GameConstraint> getGameConstraints()
@@ -169,7 +169,7 @@ public class Game extends Observable
 
     public Wallet getWallet()
     {
-        return wallet;
+        return this.wallet;
     }
 
     public void setClickedTileIndex(int clickedTileIndex) 
@@ -190,5 +190,10 @@ public class Game extends Observable
     public void setSelectedDomino(Domino selectedDomino)
     {
         this.selectedDomino = selectedDomino;
+    }
+
+    public boolean isFinished()
+    {
+        return this.finished;
     }
 }
