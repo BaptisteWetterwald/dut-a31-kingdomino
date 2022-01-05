@@ -4,60 +4,63 @@ import core_mvc.model.Domino;
 import core_mvc.model.Game;
 import core_mvc.model.Kingdom;
 import core_mvc.model.Player;
-import core_mvc.view.WalletObserver;
+
+import java.util.Comparator;
 
 public class GameController
 {
 
     private final Game game;
-    private WalletObserver walletObserver;
-    private Domino selectedDomino;
-    private int clickedTileIndex;
 
     public GameController(Game game)
     {
         this.game = game;
-        this.createWalletObserver();
-        this.addWalletObserver();
     }
 
-    private void createWalletObserver()
+    public void flipLeft()
     {
-        walletObserver = new WalletObserver(game.getWallet(), this);
+        game.getSelectedDomino().flipLeft();
     }
 
-    private void addWalletObserver()
+    public void flipRight()
     {
-        game.getWallet().addObserver(walletObserver);
+        game.getSelectedDomino().flipRight();
     }
 
-    public void flipLeft(Domino selectedDomino)
+    public void flip180()
     {
-        selectedDomino.flipLeft();
+        game.getSelectedDomino().flip180();
     }
 
-    public void flipRight(Domino selectedDomino)
+    public void tryDominoPlacement(int finalI, int finalJ)
     {
-        selectedDomino.flipRight();
+        game.getCurrentPlayer().getKingdom().tryDominoPlacement(finalI, finalJ, game.getSelectedDomino(), game.getClickedTileIndex(), game.getCurrentPlayer());
+        if (game.getSelectedDomino() == null)
+            game.playedTurn();
     }
 
-    public void flip180(Domino selectedDomino)
+    public void makeLeaderboard()
     {
-        selectedDomino.flip180();
+        game.getPlayers().sort(Comparator.comparingInt(Player::getScore).reversed());
+    }
+
+    public void slideKingdom(Kingdom kingdom, int finalI)
+    {
+        kingdom.slideGridElements(finalI);
     }
 
     public void setSelectedDomino(Domino domino)
     {
-        this.selectedDomino = domino;
+        game.setSelectedDomino(domino);
     }
 
-    public Domino getSelectedDomino()
+    public void setClickedTileIndex(int clickedTileIndex)
     {
-        return this.selectedDomino;
+        game.setClickedTileIndex(clickedTileIndex);
     }
 
-    public void tryDominoPlacement(Kingdom kingdom, int finalI, int finalJ, Player player) 
+    public void skipTurn()
     {
-        kingdom.tryDominoPlacement(finalI, finalJ, this.selectedDomino, this.clickedTileIndex, player);
+        game.playedTurn();
     }
 }

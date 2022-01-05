@@ -1,13 +1,7 @@
 package core_mvc.model;
 
-import core_mvc.model.*;
 import core_mvc.utilities.CSVReader;
-import core_mvc.view.GameView;
-import core_mvc.view.KingdomObserver;
-import core_mvc.view.ParametersGUI;
-import core_mvc.view.WalletObserver;
 
-import javax.swing.*;
 import java.util.*;
 
 public class Game
@@ -16,16 +10,25 @@ public class Game
 
     private final List<Domino> deck = new ArrayList<>();
     private final List<Player> players;
-    private Player[] newOrder;
+    private final Player[] newOrder;
     private final Wallet wallet;
-    private List<GameConstraint> gameConstraints;
+    private final List<GameConstraint> gameConstraints;
+    private final Player[] oldOrder;
+    private int clickedTileIndex;
+    private Domino selectedDomino;
+    private Player currentPlayer;
+    private int currentRound;
+    private final int numberOfRounds;
+    private int playedTurnsInRound;
 
     public Game(List<Player> players, List<GameConstraint> gameConstraints)
     {
         this.players = players;
         this.gameConstraints = gameConstraints;
+        this.currentRound = 0;
         //quickSetup();
 
+        this.clickedTileIndex = -1;
         int nbPlayers = this.players.size();
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
         CSVReader reader = CSVReader.getInstance();
@@ -37,39 +40,15 @@ public class Game
             allDominos.remove(r);
         }
 
+        this.numberOfRounds = deck.size()/wallet.getSize();
+
         for (Player p : this.players)
         {
             p.setKingdom(new Kingdom(5, 5));
         }
 
-       /* WalletObserver walletObserver = new WalletObserver(wallet, gameView);
-        wallet.addObserver(walletObserver);
-        gameView.setVisible(true);
-        gameView.setExtendedState(JFrame.MAXIMIZED_BOTH);*/
-        gameProgress();
-    }
-
-    private void quickSetup()
-    {
-        players.add(new Player("Baptou"));
-        players.add(new Player("Hamzouz"));
-        players.add(new Player("JuL"));
-        this.gameConstraints = new ArrayList<>();
-        this.gameConstraints.add(new Harmony());
-        this.gameConstraints.add(new MiddleKingdom());
-    }
-
-    private void gameProgress()
-    {
-        /*
-        for (Player p : players)
-        {
-            KingdomObserver window = new KingdomObserver(gameView, p);
-            p.getKingdom().addObserver(window);
-        }*/
-
         //First round
-        Player[] oldOrder = new Player[wallet.getSize()];
+        oldOrder = new Player[wallet.getSize()];
         for (int i=0; i<players.size(); i++)
         {
             oldOrder[i] = players.get(i);
@@ -81,35 +60,31 @@ public class Game
         Collections.shuffle(temp);
         temp.toArray(oldOrder);
 
-        while (deck.size() > 0)
-        {
-            nextRound();
+        nextRound();
+        this.currentPlayer = oldOrder[0];
+    }
 
-            for (Player p : oldOrder)
-            {
-                this.turnOf(p);
-            }
+    /*private void quickSetup()
+    {
+        players.add(new Player("Baptou"));
+        players.add(new Player("Hamzouz"));
+        players.add(new Player("JuL"));
+        this.gameConstraints = new ArrayList<>();
+        this.gameConstraints.add(new Harmony());
+        this.gameConstraints.add(new MiddleKingdom());
+    }*/
 
-            for (int i=0; i<newOrder.length; i++)
-            {
-                oldOrder[i] = newOrder[i];
-                newOrder[i] = null;
-            }
-        }
-
-        for (Player p : players)
-        {
-            p.setScore(p.getKingdom().calculateScore());
-            for (GameConstraint gc : gameConstraints)
-                gc.setNewScore(p);
-        }
-
+    private void gameProgress()
+    {
         //gameView.displayEndScreen(players, gameConstraints);
         System.out.println("Adèle said \"This is the end... of the game!\"");
     }
 
     private void nextRound()
     {
+        System.out.println("WENT IN NEXTROUND()");
+        this.currentRound++;
+        this.playedTurnsInRound = 0;
         wallet.clearUsedDominos();
         wallet.getDominos().clear();
         while (wallet.getDominos().size() < wallet.getSize())
@@ -122,47 +97,123 @@ public class Game
         wallet.notifyObservers();
     }
 
+    public int getCurrentRound()
+    {
+        return this.currentRound;
+    }
+
+    public int getNumberOfRounds()
+    {
+        return this.numberOfRounds;
+    }
+
+    public Player getCurrentPlayer()
+    {
+        return this.currentPlayer;
+    }
+
+    public void playedTurn()
+    {
+        if (deck.size() > 0)
+        {
+            int indexCurrentPlayer = playedTurnsInRound;
+            Player p = oldOrder[indexCurrentPlayer];
+
+            if (indexCurrentPlayer < oldOrder.length-1)
+                this.currentPlayer = oldOrder[indexCurrentPlayer + 1];
+
+            p.getKingdom().placeDomino(this.getSelectedDomino(), p);
+            p.setScore(p.getKingdom().calculateScore());
+            p.getKingdom().notifyObservers();
+            p.setLastPlayedDomino(this.selectedDomino);
+            this.clickedTileIndex = -1;
+            int index = wallet.getDominos().indexOf(this.selectedDomino);
+            newOrder[index] = p;
+
+            wallet.declareAsUsed(this.selectedDomino);
+            this.selectedDomino = null;
+            this.playedTurnsInRound++;
+
+            if (playedTurnsInRound == oldOrder.length) //Everyone has played
+            {
+                nextRound();
+                for (int i=0; i<newOrder.length; i++)
+                {
+                    oldOrder[i] = newOrder[i];
+                    newOrder[i] = null;
+                }
+            }
+
+            System.out.println("CONTENU WALLET : " + wallet.getDominos());
+        }
+        else
+        {
+            wallet.notifyObservers();
+            calculateFinalScores();
+        }
+    }
+
+    public void calculateFinalScores()
+    {
+        for (Player p : players)
+        {
+            //p.setScore(p.getKingdom().calculateScore());
+            for (GameConstraint gc : gameConstraints)
+                gc.setNewScore(p);
+        }
+    }
+
     private void turnOf(Player p)
     {
         //char lastLetter = p.getName().toLowerCase().charAt(p.getName().length()-1);
         //gameView.writeInstructionTitle(p.getName() + (lastLetter != 's' && lastLetter != 'z' ? "'s" : "'") + " turn");
 
-        /*p.setPlayed(false);
-        p.getKingdom().notifyObservers();
-
-        while(!p.hasPlayed())
-        {
-            try
-            {
-                Thread.sleep(200);
-            }
-            catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-        }*/
-
-        p.setScore(p.getKingdom().calculateScore());
+        /*p.setScore(p.getKingdom().calculateScore());
         p.getKingdom().notifyObservers();
 
         int index = wallet.getDominos().indexOf(p.getLastPlayedDomino());
-        newOrder[index] = p;
+        newOrder[index] = p;*/
 
         /*gameView.setSelectedDomino(null);
         gameView.setClickedTileIndex(-1);
         gameView.getSkipTurnButton().setVisible(false);*/
 
-        wallet.declareAsUsed(p.getLastPlayedDomino());
-        wallet.notifyObservers();
+        /*wallet.declareAsUsed(p.getLastPlayedDomino());
+        wallet.notifyObservers();*/
     }
 
-    public int getNbPlayers()
+    public List<Player> getPlayers()
     {
-        return this.players.size();
+        return this.players;
     }
 
     public Wallet getWallet()
     {
         return wallet;
+    }
+
+    public void setClickedTileIndex(int clickedTileIndex) 
+    {
+        this.clickedTileIndex = clickedTileIndex;
+    }
+
+    public int getClickedTileIndex()
+    {
+        return this.clickedTileIndex;
+    }
+
+    public Domino getSelectedDomino()
+    {
+        return this.selectedDomino;
+    }
+
+    public void setSelectedDomino(Domino selectedDomino)
+    {
+        this.selectedDomino = selectedDomino;
+    }
+
+    public int getPlayedTurnsInRound()
+    {
+        return this.playedTurnsInRound;
     }
 }

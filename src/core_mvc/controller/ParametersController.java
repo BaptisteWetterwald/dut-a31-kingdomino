@@ -15,6 +15,6 @@ public class ParametersController
         System.out.println("SHOULD ARRIVE HERE");
         Game game = new Game(players, gameConstraints);
         GameController controller = new GameController(game);
-        new GameView(game, controller);
+        GameView gameView = new GameView(game, controller);
     }
 }

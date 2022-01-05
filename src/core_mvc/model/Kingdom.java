@@ -89,7 +89,6 @@ public class Kingdom extends Observable
 
     public void placeDomino(Domino domino, Player p)
     {
-        p.setPlayed(true);
         p.setLastPlayedDomino(domino);
         this.notifyObservers();
     }
@@ -211,115 +210,112 @@ public class Kingdom extends Observable
         return coords;
     }
 
-    public void slideGridElements(final int direction, final boolean hasPlayed)
+    public void slideGridElements(final int direction)
     {
-        if (!hasPlayed)
+        boolean empty = true;
+
+        switch(direction)
         {
-            boolean empty = true;
+            case 0: //Left
 
-            switch(direction)
-            {
-                case 0: //Left
+                for (int i=0; i<grid.length; i++)
+                {
+                    if (grid[i][0] != null)
+                    {
+                        empty = false;
+                        break;
+                    }
+                }
+
+                if (empty)
+                {
 
                     for (int i=0; i<grid.length; i++)
                     {
-                        if (grid[i][0] != null)
+                        for (int j=0; j<grid[0].length-1; j++)
                         {
-                            empty = false;
-                            break;
+                            grid[i][j] = grid[i][j+1];
                         }
+                        grid[i][grid[0].length-1] = null;
                     }
+                    this.notifyObservers();
+                }
+                break;
 
-                    if (empty)
+            case 1: //Up
+
+                for (int i=0; i<grid[0].length; i++)
+                {
+                    if (grid[0][i] != null)
                     {
-
-                        for (int i=0; i<grid.length; i++)
-                        {
-                            for (int j=0; j<grid[0].length-1; j++)
-                            {
-                                grid[i][j] = grid[i][j+1];
-                            }
-                            grid[i][grid[0].length-1] = null;
-                        }
-                        this.notifyObservers();
+                        empty = false;
+                        break;
                     }
-                    break;
+                }
 
-                case 1: //Up
-
-                    for (int i=0; i<grid[0].length; i++)
+                if (empty)
+                {
+                    for (int j=0; j<grid[0].length; j++)
                     {
-                        if (grid[0][i] != null)
+                        for (int i=0; i<grid.length-1; i++)
                         {
-                            empty = false;
-                            break;
+                            grid[i][j] = grid[i + 1][j];
                         }
+                        grid[grid.length-1][j] = null;
                     }
+                    this.notifyObservers();
+                }
+                break;
 
-                    if (empty)
+            case 2: //Down
+
+                for (int i=0; i<grid[0].length; i++)
+                {
+                    if (grid[grid.length-1][i] != null)
                     {
-                        for (int j=0; j<grid[0].length; j++)
-                        {
-                            for (int i=0; i<grid.length-1; i++)
-                            {
-                                grid[i][j] = grid[i + 1][j];
-                            }
-                            grid[grid.length-1][j] = null;
-                        }
-                        this.notifyObservers();
+                        empty = false;
+                        break;
                     }
-                    break;
+                }
 
-                case 2: //Down
-
-                    for (int i=0; i<grid[0].length; i++)
+                if (empty)
+                {
+                    for (int j=0; j<grid[0].length; j++)
                     {
-                        if (grid[grid.length-1][i] != null)
+                        for (int i=grid.length-1; i>0; i--)
                         {
-                            empty = false;
-                            break;
+                            grid[i][j] = grid[i-1][j];
                         }
+                        grid[0][j] = null;
                     }
+                    this.notifyObservers();
+                }
+                break;
 
-                    if (empty)
+            case 3: //Right
+
+                for (int i=0; i<grid.length; i++)
+                {
+                    if (grid[i][grid[0].length-1] != null)
                     {
-                        for (int j=0; j<grid[0].length; j++)
-                        {
-                            for (int i=grid.length-1; i>0; i--)
-                            {
-                                grid[i][j] = grid[i-1][j];
-                            }
-                            grid[0][j] = null;
-                        }
-                        this.notifyObservers();
+                        empty = false;
+                        break;
                     }
-                    break;
+                }
 
-                case 3: //Right
-
+                if (empty)
+                {
                     for (int i=0; i<grid.length; i++)
                     {
-                        if (grid[i][grid[0].length-1] != null)
+                        for (int j=grid[0].length-1; j>0; j--)
                         {
-                            empty = false;
-                            break;
+                            grid[i][j] = grid[i][j-1];
                         }
+                        grid[i][0] = null;
                     }
-
-                    if (empty)
-                    {
-                        for (int i=0; i<grid.length; i++)
-                        {
-                            for (int j=grid[0].length-1; j>0; j--)
-                            {
-                                grid[i][j] = grid[i][j-1];
-                            }
-                            grid[i][0] = null;
-                        }
-                        this.notifyObservers();
-                    }
-                    break;
-            }
+                    this.notifyObservers();
+                }
+                break;
         }
 
     }

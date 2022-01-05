@@ -10,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class KingdomObserver extends JFrame implements IObserver
+public class KingdomObserver implements IObserver
 {
     private final JButton[][] buttons;
     private final int gridWidth;

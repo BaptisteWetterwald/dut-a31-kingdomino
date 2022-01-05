@@ -42,4 +42,9 @@ public class Wallet extends Observable
     {
         this.used.clear();
     }
+
+    public String getUsed()
+    {
+        return this.used.toString();
+    }
 }

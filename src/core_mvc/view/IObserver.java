@@ -1,6 +1,10 @@
 package core_mvc.view;
 
+import core_mvc.model.Kingdom;
+import core_mvc.model.Wallet;
+
 public interface IObserver
 {
-    void update(Observable object);
+    void update(Kingdom kingdom);
+    void update(Wallet wallet);
 }
