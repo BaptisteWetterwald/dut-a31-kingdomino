@@ -27,7 +27,6 @@ public class GameView extends JFrame implements IObserver
     private final Game game;
     private final GameController controller;
 
-
     //WALLET
     private final JPanel[] dominosPanel;
     private final HashMap<JPanel, JButton[]> walletMap;
@@ -36,6 +35,7 @@ public class GameView extends JFrame implements IObserver
     private final HashMap<Kingdom, JButton[][]> kingdomButtons = new HashMap<>();
     private final HashMap<Kingdom, Player> kingdomsOwners = new HashMap<>();
     private final HashMap<Kingdom, JPanel> kingdomsSlideElementsPanel = new HashMap<>();
+    private final HashMap<Kingdom, JLabel> kingdomsLabels = new HashMap<>();
     //FIN KINGDOM
 
     public GameView(Game game, GameController controller)
@@ -86,19 +86,19 @@ public class GameView extends JFrame implements IObserver
         buttonsFlip[0] = new JButton("↶");
         buttonsFlip[0].addActionListener(e -> {
             controller.flipLeft();
-            paintButtons(game.getSelectedDomino());
+            paintSelectedDomino();
         });
 
         buttonsFlip[1] = new JButton("\uD83D\uDDD8");
         buttonsFlip[1].addActionListener(e -> {
             controller.flip180();
-            paintButtons(game.getSelectedDomino());
+            paintSelectedDomino();
         });
 
         buttonsFlip[2] = new JButton("↷");
         buttonsFlip[2].addActionListener(e -> {
             controller.flipRight();
-            paintButtons(game.getSelectedDomino());
+            paintSelectedDomino();
         });
 
         Font font = new Font(Font.SERIF, Font.BOLD, 40);
@@ -149,21 +149,10 @@ public class GameView extends JFrame implements IObserver
         skipTurnButton.setVisible(false);
         skipTurnButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         skipTurnButton.addActionListener(e -> {
-            Player oldP = game.getCurrentPlayer();
-            for (Component c : kingdomsSlideElementsPanel.get(game.getCurrentPlayer().getKingdom()).getComponents())
-                c.setEnabled(false);
-            for (JButton[] b : kingdomButtons.get(game.getCurrentPlayer().getKingdom()))
-                for (JButton b2 : b)
-                    b2.setEnabled(false);
+            disableButtonsFor(game.getCurrentPlayer().getKingdom());
             controller.skipTurn();
             playedTurn();
-            Player newP = game.getCurrentPlayer();
-            for (Component c : kingdomsSlideElementsPanel.get(game.getCurrentPlayer().getKingdom()).getComponents())
-                c.setEnabled(true);
-            for (JButton[] b : kingdomButtons.get(game.getCurrentPlayer().getKingdom()))
-                for (JButton b2 : b)
-                    b2.setEnabled(true);
-            System.out.println("Old : " + oldP + ", new:" + newP);
+            enableButtonsFor(game.getCurrentPlayer().getKingdom());
         });
 
         modifyDominoPanel = new JPanel();
@@ -234,13 +223,13 @@ public class GameView extends JFrame implements IObserver
             columnPanel.add(dominosPanel[i]);
 
             int finalI = i;
-            ActionListener selectedDomino = e -> {
+            ActionListener onSelectedDomino = e -> {
                 controller.setSelectedDomino(game.getWallet().getDominos().get(finalI));
-                paintButtons(game.getWallet().getDominos().get(finalI));
+                paintSelectedDomino();
                 skipTurnButton.setVisible(true);
             };
-            buttons[0].addActionListener(selectedDomino);
-            buttons[1].addActionListener(selectedDomino);
+            buttons[0].addActionListener(onSelectedDomino);
+            buttons[1].addActionListener(onSelectedDomino);
             //buttons[1].addActionListener(e -> gameView.setSelectedDomino(wallet.getDominos().get(finalI)));
         }
         //gameView.addWalletPanel(columnPanel);
@@ -299,6 +288,7 @@ public class GameView extends JFrame implements IObserver
                     buttons[i][j] = b;
                     b.setFont(new Font(Font.SERIF, Font.BOLD, 15));
                     b.setFocusPainted(false);
+                    b.setEnabled(false);
 
                     int finalI = i;
                     int finalJ = j;
@@ -306,11 +296,11 @@ public class GameView extends JFrame implements IObserver
                     b.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            controller.tryDominoPlacement(finalI, finalJ);
-                            if (game.getSelectedDomino() == null)
+                            Player old = game.getCurrentPlayer();
+                            if (controller.tryDominoPlacement(finalI, finalJ))
                             {
-                                for (Component c : kingdomsSlideElementsPanel.get(p.getKingdom()).getComponents())
-                                    c.setEnabled(p == game.getCurrentPlayer());
+                                disableButtonsFor(old.getKingdom());
+                                enableButtonsFor(game.getCurrentPlayer().getKingdom());
                                 playedTurn();
                             }
                         }
@@ -320,30 +310,50 @@ public class GameView extends JFrame implements IObserver
                 }
             }
 
-
-
             columnKingdomPanel.add(kingdomGridWithButtons);
             label = new JLabel();
             label.setFont(new Font(Font.SERIF, Font.BOLD, 20));
             label.setText("Kingdom of " + p + " [0]");
             columnKingdomPanel.add(label);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            kingdomsLabels.put(p.getKingdom(), label);
 
             //gameView.addKingdomPanel(columnPanel);
             //columnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
             columnKingdomPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
 
             kingdomsGridPanel.add(columnKingdomPanel);
-            p.getKingdom().addObserver(this);
+            controller.addObserver(p.getKingdom(), this);
             p.getKingdom().notifyObservers();
         }
-        game.getWallet().addObserver(this);
+        controller.addObserver(game.getWallet(), this);
         game.getWallet().notifyObservers();
 
         for (Component c : kingdomsSlideElementsPanel.get(game.getCurrentPlayer().getKingdom()).getComponents())
             c.setEnabled(true);
+        for (JButton[] b : kingdomButtons.get(game.getCurrentPlayer().getKingdom()))
+            for (JButton b2 : b)
+                b2.setEnabled(true);
 
         this.writeInstructionTitle();
+    }
+
+    private void disableButtonsFor(Kingdom kingdom)
+    {
+        for (Component c : kingdomsSlideElementsPanel.get(kingdom).getComponents())
+            c.setEnabled(false);
+        for (JButton[] b : kingdomButtons.get(kingdom))
+            for (JButton b2 : b)
+                b2.setEnabled(false);
+    }
+
+    private void enableButtonsFor(Kingdom kingdom)
+    {
+        for (Component c : kingdomsSlideElementsPanel.get(kingdom).getComponents())
+            c.setEnabled(true);
+        for (JButton[] b : kingdomButtons.get(kingdom))
+            for (JButton b2 : b)
+                b2.setEnabled(true);
     }
 
     private void updateRoundCounter()
@@ -355,10 +365,9 @@ public class GameView extends JFrame implements IObserver
     {
         controller.setSelectedDomino(null);
         writeInstructionTitle();
-        paintButtons(null);
+        paintSelectedDomino();
         this.skipTurnButton.setVisible(false);
         updateRoundCounter();
-        System.out.println("Played Turn, playedTurnsInRound : " + game.getPlayedTurnsInRound());
         game.getWallet().notifyObservers();
     }
 
@@ -390,13 +399,9 @@ public class GameView extends JFrame implements IObserver
         return color;
     }
 
-    public void writeInstructionTitle(String s)
+    private void paintSelectedDomino()
     {
-        this.instructionsTitleLabel.setText(s);
-    }
-
-    private void paintButtons(Domino domino)
-    {
+        Domino domino = game.getSelectedDomino();
         if (domino == null)
         {
             selectedDominoButtons[0][0].setVisible(false);
@@ -429,34 +434,7 @@ public class GameView extends JFrame implements IObserver
 
     public void displayEndScreen(List<GameConstraint> gameConstraints)
     {
-        instructionsAndModifyPanel.removeAll();
-        instructionsAndModifyPanel.setLayout(new GridLayout(game.getPlayers().size(), 1));
-        controller.makeLeaderboard();
 
-        for (int i = 0; i < game.getPlayers().size(); i++)
-        {
-            Player p = game.getPlayers().get(i);
-            JPanel playerStats = new JPanel();
-            playerStats.setLayout(new BoxLayout(playerStats, BoxLayout.Y_AXIS));
-            JLabel name = new JLabel("#" + (i+1) + " - " + p);
-            name.setFont(new Font(Font.SERIF, Font.BOLD, 60));
-            playerStats.add(name);
-            JLabel score = new JLabel(p.getScore() + " points");
-            score.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
-            playerStats.add(score);
-            for (GameConstraint gc : gameConstraints)
-            {
-                JLabel label = new JLabel(gc.getClass().getSimpleName() + ": " + (gc.respects(p.getKingdom().getGrid()) ? "✓" : "✗"));
-                label.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
-                playerStats.add(label);
-            }
-            playerStats.setBorder(new EmptyBorder(15, 15, 15, 15));
-            instructionsAndModifyPanel.add(playerStats);
-            playerStats.setAlignmentX(Component.CENTER_ALIGNMENT);
-        }
-
-        revalidate();
-        repaint();
         /*rightPanel.remove(1);
         String s = "";
         JLabel pixelArt = new JLabel(s);
@@ -465,6 +443,16 @@ public class GameView extends JFrame implements IObserver
     }
 
     @Override
+    public void update(Observable o)
+    {
+        if (o instanceof Kingdom)
+            update((Kingdom) o);
+        else if (o instanceof Wallet)
+            update((Wallet) o);
+        else if (o instanceof Game)
+            update((Game) o);
+}
+
     public void update(Kingdom kingdom)
     {
         int gridWidth = game.getPlayers().get(0).getKingdom().getGrid()[0].length;
@@ -481,13 +469,11 @@ public class GameView extends JFrame implements IObserver
             }
         }
         Player owner = kingdomsOwners.get(kingdom);
-        label.setText("Kingdom of " + owner + " [" + owner.getScore() + "]");
+        kingdomsLabels.get(owner.getKingdom()).setText("Kingdom of " + owner + " [" + owner.getScore() + "]");
     }
 
-    @Override
     public void update(Wallet wallet)
     {
-        //System.out.println("NOTIFICATION FROM WALLET | Dominos:" + wallet.getDominos() + " | Used:" + wallet.getUsed());
         for (int i=0; i<wallet.getDominos().size(); i++)
         {
             for (int j=0; j<2; j++)
@@ -498,8 +484,42 @@ public class GameView extends JFrame implements IObserver
                 b.setBackground(this.getColorOfTile(t));
                 b.setText(t.getCrownsAsString());
             }
-            //dominosPanel[i].setVisible(!game.getWallet().hasBeenUsedAlready(game.getWallet().getDominos().get(i)));
             dominosPanel[i].setVisible(!game.getWallet().hasBeenUsedAlready(wallet.getDominos().get(i)));
         }
     }
+
+    public void update(Game game)
+    {
+        System.out.println("Wesh");
+
+        instructionsAndModifyPanel.removeAll();
+        instructionsAndModifyPanel.setLayout(new GridLayout(game.getPlayers().size(), 1));
+        controller.makeLeaderboard();
+
+        for (int i=0; i<game.getPlayers().size(); i++)
+        {
+            Player p = game.getPlayers().get(i);
+            JPanel playerStats = new JPanel();
+            playerStats.setLayout(new BoxLayout(playerStats, BoxLayout.Y_AXIS));
+            JLabel name = new JLabel("#" + (i+1) + " - " + p);
+            name.setFont(new Font(Font.SERIF, Font.BOLD, 60));
+            playerStats.add(name);
+            JLabel score = new JLabel(p.getScore() + " points");
+            score.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+            playerStats.add(score);
+            for (GameConstraint gc : game.getGameConstraints())
+            {
+                JLabel label = new JLabel(gc.getClass().getSimpleName() + ": " + (gc.respects(p.getKingdom().getGrid()) ? "✓" : "✗"));
+                label.setFont(new Font(Font.SERIF, Font.PLAIN, 30));
+                playerStats.add(label);
+            }
+            playerStats.setBorder(new EmptyBorder(15, 15, 15, 15));
+            instructionsAndModifyPanel.add(playerStats);
+            playerStats.setAlignmentX(Component.CENTER_ALIGNMENT);
+        }
+
+        revalidate();
+        repaint();
+    }
+
 }

@@ -4,6 +4,9 @@ import core_mvc.model.Domino;
 import core_mvc.model.Game;
 import core_mvc.model.Kingdom;
 import core_mvc.model.Player;
+import core_mvc.view.GameView;
+import core_mvc.view.IObserver;
+import core_mvc.view.Observable;
 
 import java.util.Comparator;
 
@@ -32,11 +35,12 @@ public class GameController
         game.getSelectedDomino().flip180();
     }
 
-    public void tryDominoPlacement(int finalI, int finalJ)
+    public boolean tryDominoPlacement(int finalI, int finalJ)
     {
-        game.getCurrentPlayer().getKingdom().tryDominoPlacement(finalI, finalJ, game.getSelectedDomino(), game.getClickedTileIndex(), game.getCurrentPlayer());
-        if (game.getSelectedDomino() == null)
+        boolean done = game.getCurrentPlayer().getKingdom().tryDominoPlacement(finalI, finalJ, game.getSelectedDomino(), game.getClickedTileIndex(), game.getCurrentPlayer());
+        if (done)
             game.playedTurn();
+        return done;
     }
 
     public void makeLeaderboard()
@@ -62,5 +66,10 @@ public class GameController
     public void skipTurn()
     {
         game.playedTurn();
+    }
+
+    public void addObserver(Observable observable, IObserver observer)
+    {
+        observable.addObserver(observer);
     }
 }

@@ -28,7 +28,7 @@ public class Kingdom extends Observable
         return this.grid;
     }
 
-    public void tryDominoPlacement(int lineIndex, int columnIndex, Domino domino, int clickedTileIndex, Player p)
+    public boolean tryDominoPlacement(int lineIndex, int columnIndex, Domino domino, int clickedTileIndex, Player p)
     {
         boolean res = false;
         if (domino != null)
@@ -84,10 +84,11 @@ public class Kingdom extends Observable
         }
 
         if (res)
-            placeDomino(domino, p);
+            placedDomino(domino, p);
+        return res;
     }
 
-    public void placeDomino(Domino domino, Player p)
+    public void placedDomino(Domino domino, Player p)
     {
         p.setLastPlayedDomino(domino);
         this.notifyObservers();

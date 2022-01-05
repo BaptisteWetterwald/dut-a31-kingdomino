@@ -1,10 +1,11 @@
 package core_mvc.model;
 
 import core_mvc.utilities.CSVReader;
+import core_mvc.view.Observable;
 
 import java.util.*;
 
-public class Game
+public class Game extends Observable
 {
     Random random = new Random();
 
@@ -33,12 +34,14 @@ public class Game
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);
         CSVReader reader = CSVReader.getInstance();
         List<Domino> allDominos = reader.generateDominos();
-        while (deck.size() < 12 * nbPlayers)
+
+        while (deck.size() < 2 * nbPlayers)
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));
             allDominos.remove(r);
         }
+        System.out.println("Taille deck = " + deck.size());
 
         this.numberOfRounds = deck.size()/wallet.getSize();
 
@@ -64,26 +67,10 @@ public class Game
         this.currentPlayer = oldOrder[0];
     }
 
-    /*private void quickSetup()
-    {
-        players.add(new Player("Baptou"));
-        players.add(new Player("Hamzouz"));
-        players.add(new Player("JuL"));
-        this.gameConstraints = new ArrayList<>();
-        this.gameConstraints.add(new Harmony());
-        this.gameConstraints.add(new MiddleKingdom());
-    }*/
-
-    private void gameProgress()
-    {
-        //gameView.displayEndScreen(players, gameConstraints);
-        System.out.println("Adèle said \"This is the end... of the game!\"");
-    }
-
     private void nextRound()
     {
-        System.out.println("WENT IN NEXTROUND()");
         this.currentRound++;
+        System.out.println("---------------ROUND " + this.currentRound + "/" + this.numberOfRounds);
         this.playedTurnsInRound = 0;
         wallet.clearUsedDominos();
         wallet.getDominos().clear();
@@ -114,72 +101,65 @@ public class Game
 
     public void playedTurn()
     {
-        if (deck.size() > 0)
+        this.clickedTileIndex = -1;
+
+        int indexCurrentPlayer = playedTurnsInRound;
+        Player p = oldOrder[indexCurrentPlayer];
+
+        if (indexCurrentPlayer < oldOrder.length-1)
+            this.currentPlayer = oldOrder[indexCurrentPlayer + 1];
+
+        p.getKingdom().placedDomino(this.getSelectedDomino(), p);
+        p.setScore(p.getKingdom().calculateScore());
+        p.getKingdom().notifyObservers();
+        p.setLastPlayedDomino(this.selectedDomino);
+        int index = wallet.getDominos().indexOf(this.selectedDomino);
+        newOrder[index] = p;
+
+        wallet.declareAsUsed(this.selectedDomino);
+        this.selectedDomino = null;
+        this.playedTurnsInRound++;
+
+        System.out.println("playedTurnsInRound: " + playedTurnsInRound);
+        System.out.println("Taille deck: " + deck.size());
+
+        if (playedTurnsInRound == oldOrder.length) //Everyone has played
         {
-            int indexCurrentPlayer = playedTurnsInRound;
-            Player p = oldOrder[indexCurrentPlayer];
-
-            if (indexCurrentPlayer < oldOrder.length-1)
-                this.currentPlayer = oldOrder[indexCurrentPlayer + 1];
-
-            p.getKingdom().placeDomino(this.getSelectedDomino(), p);
-            p.setScore(p.getKingdom().calculateScore());
-            p.getKingdom().notifyObservers();
-            p.setLastPlayedDomino(this.selectedDomino);
-            this.clickedTileIndex = -1;
-            int index = wallet.getDominos().indexOf(this.selectedDomino);
-            newOrder[index] = p;
-
-            wallet.declareAsUsed(this.selectedDomino);
-            this.selectedDomino = null;
-            this.playedTurnsInRound++;
-
-            if (playedTurnsInRound == oldOrder.length) //Everyone has played
+            if (currentRound < numberOfRounds)
             {
                 nextRound();
+                System.out.println("BEFORE oldOrder & newOrder switch :\noldOrder:" + Arrays.toString(oldOrder) + "\nnewOrder:" + Arrays.toString(newOrder));
                 for (int i=0; i<newOrder.length; i++)
                 {
                     oldOrder[i] = newOrder[i];
                     newOrder[i] = null;
                 }
+                this.currentPlayer = oldOrder[0];
+                System.out.println("AFTER oldOrder & newOrder switch :\noldOrder:" + Arrays.toString(oldOrder) + "\nnewOrder:" + Arrays.toString(newOrder));
             }
-
-            System.out.println("CONTENU WALLET : " + wallet.getDominos());
-        }
-        else
-        {
-            wallet.notifyObservers();
-            calculateFinalScores();
+            else
+            {
+                System.out.println("Adèle said \"This is the end... of the game!\"");
+                //wallet.getDominos().clear();
+                //wallet.notifyObservers();
+                this.notifyObservers();
+                this.calculateFinalScores();
+            }
         }
     }
 
-    public void calculateFinalScores()
+    private void calculateFinalScores()
     {
         for (Player p : players)
         {
-            //p.setScore(p.getKingdom().calculateScore());
             for (GameConstraint gc : gameConstraints)
                 gc.setNewScore(p);
         }
     }
 
-    private void turnOf(Player p)
+    public List<GameConstraint> getGameConstraints()
     {
-        //char lastLetter = p.getName().toLowerCase().charAt(p.getName().length()-1);
-        //gameView.writeInstructionTitle(p.getName() + (lastLetter != 's' && lastLetter != 'z' ? "'s" : "'") + " turn");
-
-        /*p.setScore(p.getKingdom().calculateScore());
-        p.getKingdom().notifyObservers();
-
-        int index = wallet.getDominos().indexOf(p.getLastPlayedDomino());
-        newOrder[index] = p;*/
-
-        /*gameView.setSelectedDomino(null);
-        gameView.setClickedTileIndex(-1);
-        gameView.getSkipTurnButton().setVisible(false);*/
-
-        /*wallet.declareAsUsed(p.getLastPlayedDomino());
-        wallet.notifyObservers();*/
+        return this.gameConstraints;
     }
 
     public List<Player> getPlayers()
@@ -210,10 +190,5 @@ public class Game
     public void setSelectedDomino(Domino selectedDomino)
     {
         this.selectedDomino = selectedDomino;
-    }
-
-    public int getPlayedTurnsInRound()
-    {
-        return this.playedTurnsInRound;
     }
 }
