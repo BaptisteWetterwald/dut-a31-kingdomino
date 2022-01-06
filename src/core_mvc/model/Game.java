@@ -111,7 +111,6 @@ public class Game extends Observable
         p.getKingdom().placedDomino(this.getSelectedDomino(), p);
         p.setScore(p.getKingdom().calculateScore());
         p.getKingdom().notifyObservers();
-        p.setLastPlayedDomino(this.selectedDomino);
         int index = wallet.getDominos().indexOf(this.selectedDomino);
         newOrder[index] = p;
 
@@ -154,23 +153,21 @@ public class Game extends Observable
                 gc.setNewScore(p);
     }
 
-    public boolean createPlayer(String name)
+    public void createPlayer(String name)
     {
         boolean done = numberOfRounds == 0;
         if (done)
             this.players.add(new Player(name.length() > 0 ? name : "Anon " + (this.players.size()+1)));
-        return done;
     }
 
-    public boolean clearPlayers()
+    public void clearPlayers()
     {
         boolean done = numberOfRounds == 0;
         if (done)
             this.players.clear();
-        return done;
     }
 
-    public boolean addGameConstraint(Class constraintClass)
+    public void addGameConstraint(Class constraintClass)
     {
         boolean done = numberOfRounds == 0;
         if (done)
@@ -180,10 +177,9 @@ public class Game extends Observable
             else if (constraintClass == Harmony.class)
                 this.gameConstraints.add(new Harmony());
         }
-        return done;
     }
 
-    public boolean removeGameConstraint(Class constraintClass)
+    public void removeGameConstraint(Class constraintClass)
     {
         boolean done = numberOfRounds == 0;
         if (done)
@@ -193,7 +189,6 @@ public class Game extends Observable
             else if (constraintClass == Harmony.class)
                 this.gameConstraints.removeIf(gc -> gc instanceof Harmony);
         }
-        return done;
     }
 
     public List<GameConstraint> getGameConstraints()

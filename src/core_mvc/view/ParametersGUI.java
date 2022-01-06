@@ -1,13 +1,13 @@
 package core_mvc.view;
 
 import core_mvc.controller.ParametersController;
-import core_mvc.model.*;
+import core_mvc.model.Game;
+import core_mvc.model.Harmony;
+import core_mvc.model.MiddleKingdom;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ParametersGUI extends JFrame
 {

@@ -4,15 +4,12 @@ public class Player
 {
     private Kingdom kingdom;
     private final String name;
-    private boolean played;
-    private Domino lastPlayedDomino;
     private int score;
 
     public Player(String name)
     {
         this.name = name;
         this.score = 0;
-        this.played = true;
     }
 
     public String getName()
@@ -34,24 +31,6 @@ public class Player
     public String toString()
     {
         return this.name;
-    }
-
-    public boolean hasPlayed() {
-        return played;
-    }
-
-    public void setPlayed(boolean hasPlayed) {
-        this.played = hasPlayed;
-    }
-    
-    public Domino getLastPlayedDomino()
-    {
-        return this.lastPlayedDomino;
-    }
-
-    public void setLastPlayedDomino(Domino domino)
-    {
-        this.lastPlayedDomino = domino;
     }
 
     public int getScore()
