@@ -96,16 +96,16 @@ public class ParametersGUI extends JFrame
 
         harmonyMode.addActionListener(e -> {
             if (harmonyMode.isSelected())
-                controller.addGameConstraint(Harmony.class);
+                controller.addHarmonyConstraint();
             else
-                controller.removeGameConstraint(Harmony.class);
+                controller.removeHarmonyConstraint();
         });
 
         middleKingdom.addActionListener(e -> {
             if (middleKingdom.isSelected())
-                controller.addGameConstraint(MiddleKingdom.class);
+                controller.addMiddleKingdomConstraint();
             else
-                controller.removeGameConstraint(MiddleKingdom.class);
+                controller.removeMiddleKingdomConstraint();
         });
 
         this.setContentPane(bigPanel);

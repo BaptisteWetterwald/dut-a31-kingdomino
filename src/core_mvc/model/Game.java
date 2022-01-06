@@ -108,7 +108,6 @@ public class Game extends Observable
         if (indexCurrentPlayer < oldOrder.length-1)
             this.currentPlayer = oldOrder[indexCurrentPlayer + 1];
 
-        p.getKingdom().placedDomino(this.getSelectedDomino(), p);
         p.setScore(p.getKingdom().calculateScore());
         p.getKingdom().notifyObservers();
         int index = wallet.getDominos().indexOf(this.selectedDomino);
@@ -167,28 +166,28 @@ public class Game extends Observable
             this.players.clear();
     }
 
-    public void addGameConstraint(Class constraintClass)
+    public void addHarmonyConstraint()
     {
-        boolean done = numberOfRounds == 0;
-        if (done)
-        {
-            if (constraintClass == MiddleKingdom.class)
-                this.gameConstraints.add(new MiddleKingdom());
-            else if (constraintClass == Harmony.class)
-                this.gameConstraints.add(new Harmony());
-        }
+        if (numberOfRounds == 0)
+            this.gameConstraints.add(new Harmony());
     }
 
-    public void removeGameConstraint(Class constraintClass)
+    public void removeHarmonyConstraint()
     {
-        boolean done = numberOfRounds == 0;
-        if (done)
-        {
-            if (constraintClass == MiddleKingdom.class)
-                this.gameConstraints.removeIf(gc -> gc instanceof MiddleKingdom);
-            else if (constraintClass == Harmony.class)
-                this.gameConstraints.removeIf(gc -> gc instanceof Harmony);
-        }
+        if (numberOfRounds == 0)
+            this.gameConstraints.removeIf(gc -> gc instanceof Harmony);
+    }
+
+    public void addMiddleKingdomConstraint()
+    {
+        if (numberOfRounds == 0)
+            this.gameConstraints.add(new MiddleKingdom());
+    }
+
+    public void removeMiddleKingdomConstraint()
+    {
+        if (numberOfRounds == 0)
+            this.gameConstraints.removeIf(gc -> gc instanceof MiddleKingdom);
     }
 
     public List<GameConstraint> getGameConstraints()

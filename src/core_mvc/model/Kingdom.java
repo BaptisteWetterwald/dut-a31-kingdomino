@@ -82,14 +82,8 @@ public class Kingdom extends Observable
         }
 
         if (res)
-            placedDomino(domino, p);
+            this.notifyObservers();
         return res;
-    }
-
-    public void placedDomino(Domino domino, Player p)
-    {
-        p.setLastPlayedDomino(domino);
-        this.notifyObservers();
     }
 
     public boolean hasValidNeighbor(Tile t1, int l, int c)

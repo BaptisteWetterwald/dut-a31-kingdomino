@@ -23,14 +23,24 @@ public class ParametersController
         game.createPlayer(s);
     }
 
-    public void addGameConstraint(Class c)
+    public void addMiddleKingdomConstraint()
     {
-        game.addGameConstraint(c);
+        game.addMiddleKingdomConstraint();
     }
 
-    public void removeGameConstraint(Class c)
+    public void removeMiddleKingdomConstraint()
     {
-        game.removeGameConstraint(c);
+        game.removeMiddleKingdomConstraint();
+    }
+
+    public void addHarmonyConstraint()
+    {
+        game.addHarmonyConstraint();
+    }
+
+    public void removeHarmonyConstraint()
+    {
+        game.removeHarmonyConstraint();
     }
 
     public void clearPlayers()
