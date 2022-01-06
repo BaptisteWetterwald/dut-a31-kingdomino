@@ -1,10 +1,7 @@
 package core_mvc.view;
 
 import core_mvc.controller.ParametersController;
-import core_mvc.model.GameConstraint;
-import core_mvc.model.Harmony;
-import core_mvc.model.MiddleKingdom;
-import core_mvc.model.Player;
+import core_mvc.model.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -17,18 +14,16 @@ public class ParametersGUI extends JFrame
     private final JPanel names;
     private final JCheckBox harmonyMode;
     private final JCheckBox middleKingdom;
+    private int nbPlayers;
     private JLabel label;
     private JTextField txt;
     private final JButton startButton = new JButton("Let's gooooo !");
-    private final List<Player> players;
-    private final List<GameConstraint> gameConstraints = new ArrayList<>();
 
-    public ParametersGUI(ParametersController controller)
+    public ParametersGUI(Game game, ParametersController controller)
     {
         this.setTitle("\"Only kings play KingDomino\"");
-        this.setSize(1000,500);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        players = new ArrayList<>();
         JPanel nbPlayersSelection = new JPanel();
         Border nbPlayers = BorderFactory.createTitledBorder("How many players:");
         nbPlayersSelection.setBorder(nbPlayers);
@@ -64,15 +59,16 @@ public class ParametersGUI extends JFrame
         bigPanel.add(names);
         names.setBorder(namesTitle);
 
-        for (Component r : nbPlayersSelection.getComponents()) {
+        for (Component r : nbPlayersSelection.getComponents())
             if (r instanceof JRadioButton)
-            {
                 ((JRadioButton) r).addActionListener(e -> {
                     if(((JRadioButton) r).isSelected())
                     {
-                        int id=Integer.parseInt(((JRadioButton) r).getText().substring(0,1));
+                        int id = Integer.parseInt(((JRadioButton) r).getText().substring(0,1));
+                        this.nbPlayers = Integer.parseInt(((JRadioButton) r).getText().substring(0,1));
                         names.removeAll();
-                        for (int i = 0; i < id; i++) {
+                        for (int i = 0; i < id; i++)
+                        {
                             label = new JLabel("Player n°" + (i+1));
                             txt = new JTextField();
                             txt.setSize(10,2);
@@ -84,20 +80,15 @@ public class ParametersGUI extends JFrame
                         repaint();
                     }
                 });
-            }
-        }
 
         startButton.addActionListener(e -> {
-            players.clear();
-            for (Component r : names.getComponents()) {
+            controller.clearPlayers();
+            for (Component r : names.getComponents())
                 if (r instanceof JTextField)
-                {
-                    players.add(new Player(((JTextField) r).getText()));
-                }
-            }
-            if (players.size() > 0)
+                    controller.addPlayer( ((JTextField) r).getText() );
+            if (game.getPlayers().size() == this.nbPlayers)
             {
-                controller.startGame(players, gameConstraints);
+                controller.startGame();
                 this.setVisible(false);
                 this.dispose();
             }
@@ -105,20 +96,16 @@ public class ParametersGUI extends JFrame
 
         harmonyMode.addActionListener(e -> {
             if (harmonyMode.isSelected())
-                gameConstraints.add(new Harmony());
+                controller.addGameConstraint(Harmony.class);
             else
-            {
-                gameConstraints.removeIf(gc -> gc instanceof Harmony);
-            }
+                controller.removeGameConstraint(Harmony.class);
         });
 
         middleKingdom.addActionListener(e -> {
             if (middleKingdom.isSelected())
-                gameConstraints.add(new MiddleKingdom());
+                controller.addGameConstraint(MiddleKingdom.class);
             else
-            {
-                gameConstraints.removeIf(gc -> gc instanceof MiddleKingdom);
-            }
+                controller.removeGameConstraint(MiddleKingdom.class);
         });
 
         this.setContentPane(bigPanel);

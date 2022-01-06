@@ -8,26 +8,24 @@ public class Game extends Observable
 {
     Random random = new Random();
 
-    private final List<Domino> deck = new ArrayList<>();
-    private final List<Player> players;
-    private final Player[] newOrder;
-    private final Wallet wallet;
-    private final List<GameConstraint> gameConstraints;
-    private final Player[] oldOrder;
-    private int clickedTileIndex;
+    private List<Domino> deck = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
+    private List<GameConstraint> gameConstraints = new ArrayList<>();
+    private Player[] oldOrder;
+    private Player[] newOrder;
     private Domino selectedDomino;
     private Player currentPlayer;
+    private Wallet wallet;
+    private int clickedTileIndex;
     private int currentRound;
-    private final int numberOfRounds;
+    private int numberOfRounds;
     private int playedTurnsInRound;
-    private boolean finished = false;
+    private boolean finished = true;
 
-    public Game(List<Player> players, List<GameConstraint> gameConstraints)
+    public void start()
     {
-        this.players = players;
-        this.gameConstraints = gameConstraints;
+        System.out.println("GAME STARTED");
         this.currentRound = 0;
-        //quickSetup();
 
         this.clickedTileIndex = -1;
         int nbPlayers = this.players.size();
@@ -35,7 +33,7 @@ public class Game extends Observable
         CSVReader reader = CSVReader.getInstance();
         List<Domino> allDominos = reader.generateDominos();
 
-        while (deck.size() < 12 * nbPlayers)
+        while (deck.size() < 2 * nbPlayers)
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));
@@ -64,7 +62,10 @@ public class Game extends Observable
 
         nextRound();
         this.currentPlayer = oldOrder[0];
+
+        this.notifyObservers();
     }
+
 
     private void nextRound()
     {
@@ -133,11 +134,15 @@ public class Game extends Observable
             else
             {
                 //System.out.println("Adèle said \"This is the end... of the game!\"");
-                this.finished = true;
+
                 this.calculateFinalScores();
                 for (Player p2 : this.players)
                     p2.getKingdom().notifyObservers();
                 this.notifyObservers();
+                this.finished = true;
+                this.deck = new ArrayList<>();
+                this.players = new ArrayList<>();
+                this.gameConstraints = new ArrayList<>();
             }
         }
     }
@@ -147,6 +152,48 @@ public class Game extends Observable
         for (Player p : this.players)
             for (GameConstraint gc : gameConstraints)
                 gc.setNewScore(p);
+    }
+
+    public boolean createPlayer(String name)
+    {
+        boolean done = numberOfRounds == 0;
+        if (done)
+            this.players.add(new Player(name.length() > 0 ? name : "Anon " + (this.players.size()+1)));
+        return done;
+    }
+
+    public boolean clearPlayers()
+    {
+        boolean done = numberOfRounds == 0;
+        if (done)
+            this.players.clear();
+        return done;
+    }
+
+    public boolean addGameConstraint(Class constraintClass)
+    {
+        boolean done = numberOfRounds == 0;
+        if (done)
+        {
+            if (constraintClass == MiddleKingdom.class)
+                this.gameConstraints.add(new MiddleKingdom());
+            else if (constraintClass == Harmony.class)
+                this.gameConstraints.add(new Harmony());
+        }
+        return done;
+    }
+
+    public boolean removeGameConstraint(Class constraintClass)
+    {
+        boolean done = numberOfRounds == 0;
+        if (done)
+        {
+            if (constraintClass == MiddleKingdom.class)
+                this.gameConstraints.removeIf(gc -> gc instanceof MiddleKingdom);
+            else if (constraintClass == Harmony.class)
+                this.gameConstraints.removeIf(gc -> gc instanceof Harmony);
+        }
+        return done;
     }
 
     public List<GameConstraint> getGameConstraints()
@@ -188,4 +235,6 @@ public class Game extends Observable
     {
         return this.finished;
     }
+
+
 }

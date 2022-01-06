@@ -17,40 +17,54 @@ import static java.awt.Color.*;
 
 public class GameView extends JFrame implements IObserver
 {
-    private final JButton[][] selectedDominoButtons;
-    private final JPanel modifyDominoPanel;
-    private final JButton skipTurnButton;
-    private final JLabel instructionsTitleLabel;
-    private final JLabel roundCounterLabel;
-    private final JPanel instructionsAndModifyPanel;
-    private final JPanel linePanel;
+    private JButton[][] selectedDominoButtons;
+    private JPanel modifyDominoPanel;
+    private JButton skipTurnButton;
+    private JLabel instructionsTitleLabel;
+    private JLabel roundCounterLabel;
+    private JPanel instructionsAndModifyPanel;
+    private JPanel linePanel;
 
     private final Game game;
     private final GameController controller;
 
     //WALLET
-    private final JPanel[] dominosPanel;
-    private final HashMap<JPanel, JButton[]> walletMap;
+    private JPanel[] dominosPanel;
+    private HashMap<JPanel, JButton[]> walletMap;
     //FIN WALLET
     private JLabel label;
-    private final HashMap<Kingdom, JButton[][]> kingdomButtons = new HashMap<>();
-    private final HashMap<Kingdom, Player> kingdomsOwners = new HashMap<>();
-    private final HashMap<Kingdom, JPanel> kingdomsSlideElementsPanel = new HashMap<>();
-    private final HashMap<Kingdom, JLabel> kingdomsLabels = new HashMap<>();
+    private HashMap<Kingdom, JButton[][]> kingdomButtons;
+    private HashMap<Kingdom, Player> kingdomsOwners;
+    private HashMap<Kingdom, JPanel> kingdomsSlideElementsPanel;
+    private HashMap<Kingdom, JLabel> kingdomsLabels;
+    private boolean started;
     //FIN KINGDOM
 
     public GameView(Game game, GameController controller)
     {
-        UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
-
-        //Début swing pour board de base
         this.game = game;
         this.controller = controller;
-        //KINGDOM
 
+        UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
         this.setTitle("\"Only kings play KingDomino\"");
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setVisible(true);
+
+        controller.addObserver(game, this);
+    }
+
+    public void setUp()
+    {
+        this.started = true;
+
+        System.out.println("SET UP");
+        //Début swing pour board de base
+
+        this.kingdomButtons = new HashMap<>();
+        this.kingdomsOwners = new HashMap<>();
+        this.kingdomsSlideElementsPanel = new HashMap<>();
+        this.kingdomsLabels = new HashMap<>();
 
         JPanel kingdomsGridPanel = new JPanel();
         kingdomsGridPanel.setLayout(new GridLayout(0, 2));
@@ -153,7 +167,7 @@ public class GameView extends JFrame implements IObserver
             disableButtonsFor(game.getCurrentPlayer().getKingdom());
             controller.skipTurn();
             playedTurn();
-            if (!game.isFinished())
+            if (game.isFinished())
                 enableButtonsFor(game.getCurrentPlayer().getKingdom());
         });
 
@@ -262,13 +276,13 @@ public class GameView extends JFrame implements IObserver
             for (int i=0; i<4; i++)
             {
                 String s = switch (i)
-                {
-                    case 0 -> "◀";
-                    case 1 -> "▲";
-                    case 2 -> "▼";
-                    case 3 -> "▶";
-                    default -> "";
-                };
+                        {
+                            case 0 -> "◀";
+                            case 1 -> "▲";
+                            case 2 -> "▼";
+                            case 3 -> "▶";
+                            default -> "";
+                        };
                 JButton b = new JButton(s);
                 int finalI = i;
 
@@ -302,7 +316,7 @@ public class GameView extends JFrame implements IObserver
                             {
                                 disableButtonsFor(old.getKingdom());
                                 playedTurn();
-                                if (!game.isFinished())
+                                if (game.isFinished())
                                     enableButtonsFor(game.getCurrentPlayer().getKingdom());
                             }
                         }
@@ -325,12 +339,12 @@ public class GameView extends JFrame implements IObserver
             columnKingdomPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
 
             kingdomsGridPanel.add(columnKingdomPanel);
+            controller.addObserver(game.getWallet(), this);
             controller.addObserver(p.getKingdom(), this);
             p.getKingdom().notifyObservers();
         }
-        controller.addObserver(game.getWallet(), this);
+
         game.getWallet().notifyObservers();
-        controller.addObserver(game, this);
 
         for (Component c : kingdomsSlideElementsPanel.get(game.getCurrentPlayer().getKingdom()).getComponents())
             c.setEnabled(true);
@@ -453,7 +467,7 @@ public class GameView extends JFrame implements IObserver
         else if (o instanceof Wallet)
             update((Wallet) o);
         else if (o instanceof Game)
-            update((Game) o);
+            update();
 }
 
     public void update(Kingdom kingdom)
@@ -490,8 +504,21 @@ public class GameView extends JFrame implements IObserver
         }
     }
 
-    public void update(Game game)
+    public void update()
     {
+        System.out.println("WENT HERE");
+        if (game.isFinished() && !this.started)
+        {
+            this.setUp();
+        }
+        else
+            this.end();
+    }
+
+    private void end()
+    {
+        this.started = false;
+        System.out.println("END");
         for (Player p : game.getPlayers())
             disableButtonsFor(p.getKingdom());
 

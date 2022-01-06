@@ -1,20 +1,40 @@
 package core_mvc.controller;
 
 import core_mvc.model.Game;
-import core_mvc.model.GameConstraint;
-import core_mvc.model.Player;
 import core_mvc.view.GameView;
-
-import java.util.List;
 
 public class ParametersController
 {
+    private final Game game;
 
-    public void startGame(List<Player> players, List<GameConstraint> gameConstraints)
+    public ParametersController(Game game)
     {
-        System.out.println("SHOULD ARRIVE HERE");
-        Game game = new Game(players, gameConstraints);
-        GameController controller = new GameController(game);
-        GameView gameView = new GameView(game, controller);
+        this.game = game;
+    }
+
+    public void startGame()
+    {
+        new GameView(game, new GameController(game));
+        game.start();
+    }
+
+    public void addPlayer(String s)
+    {
+        game.createPlayer(s);
+    }
+
+    public void addGameConstraint(Class c)
+    {
+        game.addGameConstraint(c);
+    }
+
+    public void removeGameConstraint(Class c)
+    {
+        game.removeGameConstraint(c);
+    }
+
+    public void clearPlayers()
+    {
+        game.clearPlayers();
     }
 }
