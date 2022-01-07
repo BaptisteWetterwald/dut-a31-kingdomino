@@ -1,11 +1,11 @@
-package core_mvc.controller;
+package core.controller;
 
-import core_mvc.model.Domino;
-import core_mvc.model.Game;
-import core_mvc.model.Kingdom;
-import core_mvc.model.Player;
-import core_mvc.model.IObserver;
-import core_mvc.model.Observable;
+import core.model.Domino;
+import core.model.Game;
+import core.model.Kingdom;
+import core.model.Player;
+import core.model.IObserver;
+import core.model.Observable;
 
 import java.util.Comparator;
 

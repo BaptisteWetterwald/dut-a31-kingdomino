@@ -4,22 +4,6 @@ public class Domino
 {
     private final int id;
     private boolean horizontal;
-    /*
-        1 à l'indice 0 et 3 à l'indice 1 :
-        [1|3]
-        ou
-        1
-        -
-        3
-
-        Inverse (3 à l'indice 0 et 1 à l'indice 1):
-        [3|1]
-        ou
-        3
-        -
-        1
-
-     */
     private final Tile[] tiles = new Tile[2];
 
     public Domino(int id, Tile t1, Tile t2)
@@ -44,6 +28,7 @@ public class Domino
     public String toString()
     {
         return this.getId() + " | " + this.tiles[0].toString() + " | " + this.tiles[1].toString();
+        //return String.valueOf(this.getId());
     }
 
     public void flip180()

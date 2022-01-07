@@ -1,7 +1,7 @@
-package core_mvc.view;
+package core.view;
 
-import core_mvc.controller.GameController;
-import core_mvc.model.*;
+import core.controller.GameController;
+import core.model.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

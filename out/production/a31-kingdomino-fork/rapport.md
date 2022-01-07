@@ -4,9 +4,9 @@ _Baptiste WETTERWALD - Hamza LOUADA - Groupe 2_
 
 ### **Choix de conception :**
 
-**Modèle core_mvc :**
+**Modèle core :**
 
-Nous suivons les règles du modèle core_mvc (Model, View, Controller).
+Nous suivons les règles du modèle core (Model, View, Controller).
 
 **Classe Game :**
 

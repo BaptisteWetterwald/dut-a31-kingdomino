@@ -1,6 +1,6 @@
-package core_mvc.model;
+package core.model;
 
-import core_mvc.utilities.CSVReader;
+import core.utilities.CSVReader;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ public class Game extends Observable
         CSVReader reader = CSVReader.getInstance();
         List<Domino> allDominos = reader.generateDominos();
 
-        while (deck.size() < 2 * nbPlayers)
+        while (deck.size() < 12 * nbPlayers)
         {
             int r = random.nextInt(allDominos.size());
             deck.add(allDominos.get(r));

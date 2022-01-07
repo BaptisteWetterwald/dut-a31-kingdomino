@@ -1,7 +1,5 @@
 package core.model;
 
-import core.view.Observable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,4 +40,5 @@ public class Wallet extends Observable
     {
         this.used.clear();
     }
+
 }

@@ -1,4 +1,4 @@
-package core_mvc.model;
+package core.model;
 
 import java.util.ArrayList;
 import java.util.List;

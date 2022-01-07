@@ -1,7 +1,7 @@
-package core_mvc.controller;
+package core.controller;
 
-import core_mvc.model.Game;
-import core_mvc.view.GameView;
+import core.model.Game;
+import core.view.GameView;
 
 public class ParametersController
 {
