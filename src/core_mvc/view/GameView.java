@@ -23,22 +23,18 @@ public class GameView extends JFrame implements IObserver
     private JLabel instructionsTitleLabel;
     private JLabel roundCounterLabel;
     private JPanel instructionsAndModifyPanel;
-    private JPanel linePanel;
 
     private final Game game;
     private final GameController controller;
 
-    //WALLET
     private JPanel[] dominosPanel;
     private HashMap<JPanel, JButton[]> walletMap;
-    //FIN WALLET
-    private JLabel label;
+
     private HashMap<Kingdom, JButton[][]> kingdomButtons;
     private HashMap<Kingdom, Player> kingdomsOwners;
     private HashMap<Kingdom, JPanel> kingdomsSlideElementsPanel;
     private HashMap<Kingdom, JLabel> kingdomsLabels;
     private boolean started;
-    //FIN KINGDOM
 
     public GameView(Game game, GameController controller)
     {
@@ -59,7 +55,6 @@ public class GameView extends JFrame implements IObserver
         this.started = true;
 
         System.out.println("SET UP");
-        //Début swing pour board de base
 
         this.kingdomButtons = new HashMap<>();
         this.kingdomsOwners = new HashMap<>();
@@ -184,7 +179,7 @@ public class GameView extends JFrame implements IObserver
         instructionsAndModifyPanel.add(modifyDominoPanel);
         instructionsAndModifyPanel.add(instructionsPanel);
 
-        linePanel = new JPanel();
+        JPanel linePanel = new JPanel();
         linePanel.setLayout(new GridLayout(1, 2));
         if (game.getPlayers().size() == 2)
         {
@@ -203,9 +198,6 @@ public class GameView extends JFrame implements IObserver
         linePanel.add(rightPanel);
         this.setContentPane(linePanel);
         this.setVisible(true);
-        //Fin swing board de base
-
-        //Début swing wallet
         walletMap = new HashMap<>();
         JPanel columnPanel = new JPanel();
         columnPanel.setLayout(new GridLayout(4, 1));
@@ -215,7 +207,6 @@ public class GameView extends JFrame implements IObserver
         {
             dominosPanel[i] = new JPanel();
             dominosPanel[i].setLayout(new GridLayout(1, 2));
-            //dominosPanel[i].setBorder(new EmptyBorder(50, 10, 50, 10));
             dominosPanel[i].setBorder(new EmptyBorder(12, 12, 12, 12));
             JButton[] buttons = new JButton[2];
             buttons[0] = new JButton();
@@ -232,7 +223,6 @@ public class GameView extends JFrame implements IObserver
             buttons[0].setFocusPainted(false);
             buttons[1].setFocusPainted(false);
 
-            //buttons[1].setBorder(new EmptyBorder(5, 5, 5, 5));
             walletMap.put(dominosPanel[i], buttons);
             dominosPanel[i].add(buttons[0]);
             dominosPanel[i].add(buttons[1]);
@@ -246,14 +236,9 @@ public class GameView extends JFrame implements IObserver
             };
             buttons[0].addActionListener(onSelectedDomino);
             buttons[1].addActionListener(onSelectedDomino);
-            //buttons[1].addActionListener(e -> gameView.setSelectedDomino(wallet.getDominos().get(finalI)));
         }
-        //gameView.addWalletPanel(columnPanel);
         rightPanel.add(columnPanel);
 
-        //Fin swing wallet
-
-        //Début swing kingdom
 
         int gridWidth = game.getPlayers().get(0).getKingdom().getGrid()[0].length;
         int gridHeight = game.getPlayers().get(0).getKingdom().getGrid().length;
@@ -308,34 +293,28 @@ public class GameView extends JFrame implements IObserver
 
                     int finalI = i;
                     int finalJ = j;
-                    b.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            Player old = game.getCurrentPlayer();
-                            if (controller.tryDominoPlacement(finalI, finalJ))
-                            {
-                                disableButtonsFor(old.getKingdom());
-                                playedTurn();
-                                if (game.isFinished())
-                                    enableButtonsFor(game.getCurrentPlayer().getKingdom());
-                            }
+                    b.addActionListener(e -> {
+                        Player old = game.getCurrentPlayer();
+                        if (controller.tryDominoPlacement(finalI, finalJ))
+                        {
+                            disableButtonsFor(old.getKingdom());
+                            playedTurn();
+                            if (game.isFinished())
+                                enableButtonsFor(game.getCurrentPlayer().getKingdom());
                         }
                     });
-                    //b.addActionListener(e -> kingdom.tryDominoPlacement(finalI, finalJ, gameView.getSelectedDomino(), gameView.getClickedTileIndex(), player));
                     gridPanel.add(b);
                 }
             }
 
             columnKingdomPanel.add(kingdomGridWithButtons);
-            label = new JLabel();
+            JLabel label = new JLabel();
             label.setFont(new Font(Font.SERIF, Font.BOLD, 20));
             label.setText("Kingdom of " + p + " [0]");
             columnKingdomPanel.add(label);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             kingdomsLabels.put(p.getKingdom(), label);
 
-            //gameView.addKingdomPanel(columnPanel);
-            //columnPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
             columnKingdomPanel.setBorder(new EmptyBorder(12, 12, 12, 12));
 
             kingdomsGridPanel.add(columnKingdomPanel);
@@ -449,16 +428,6 @@ public class GameView extends JFrame implements IObserver
         }
     }
 
-    public void displayEndScreen(List<GameConstraint> gameConstraints)
-    {
-
-        /*rightPanel.remove(1);
-        String s = "";
-        JLabel pixelArt = new JLabel(s);
-        pixelArt.setFont(new Font(Font.SERIF, Font.PLAIN, 20));
-        rightPanel.add(pixelArt);*/
-    }
-
     @Override
     public void update(Observable o)
     {
@@ -506,7 +475,6 @@ public class GameView extends JFrame implements IObserver
 
     public void update()
     {
-        System.out.println("WENT HERE");
         if (game.isFinished() && !this.started)
         {
             this.setUp();
@@ -518,7 +486,6 @@ public class GameView extends JFrame implements IObserver
     private void end()
     {
         this.started = false;
-        System.out.println("END");
         for (Player p : game.getPlayers())
             disableButtonsFor(p.getKingdom());
 

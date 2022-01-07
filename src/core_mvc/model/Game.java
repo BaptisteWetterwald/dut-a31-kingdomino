@@ -24,7 +24,6 @@ public class Game extends Observable
 
     public void start()
     {
-        System.out.println("GAME STARTED");
         this.currentRound = 0;
 
         this.clickedTileIndex = -1;
@@ -47,7 +46,6 @@ public class Game extends Observable
             p.setKingdom(new Kingdom(5, 5));
         }
 
-        //First round
         oldOrder = new Player[wallet.getSize()];
         for (int i=0; i<players.size(); i++)
         {
