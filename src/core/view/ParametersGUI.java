@@ -90,7 +90,7 @@ public class ParametersGUI extends JFrame
         }
         JPanel modeSelection = new JPanel();
         modeSelection.setBackground(new Color(255, 255, 255, 150));
-        TitledBorder mode = BorderFactory.createTitledBorder("Choose a game mode:");
+        TitledBorder mode = BorderFactory.createTitledBorder("Choose a game mode");
         mode.setTitleFont(font);
         mode.setTitleJustification(TitledBorder.CENTER);
         modeSelection.setBorder(mode);
@@ -141,7 +141,7 @@ public class ParametersGUI extends JFrame
         bigPanel.setLayout(new GridLayout(0, 2));
         names = new JPanel();
         names.setLayout(new GridLayout(9, 0));
-        TitledBorder namesTitle = BorderFactory.createTitledBorder("Enter the players names:");
+        TitledBorder namesTitle = BorderFactory.createTitledBorder("Enter the players names");
         namesTitle.setTitleFont(font);
         namesTitle.setTitleJustification(TitledBorder.CENTER);
         bigPanel.add(p1);
