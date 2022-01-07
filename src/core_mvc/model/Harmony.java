@@ -5,8 +5,7 @@ public class Harmony implements GameConstraint
     @Override
     public void setNewScore(Player p)
     {
-        if (respects(p.getKingdom().getGrid()))
-            p.setScore(p.getScore() + 5);
+        p.setScore(p.getScore() + 5);
     }
 
     @Override

@@ -23,24 +23,9 @@ public class ParametersController
         game.createPlayer(s);
     }
 
-    public void addMiddleKingdomConstraint()
+    public void setGameConstraints(boolean harmony, boolean middleKingdom)
     {
-        game.addMiddleKingdomConstraint();
-    }
-
-    public void removeMiddleKingdomConstraint()
-    {
-        game.removeMiddleKingdomConstraint();
-    }
-
-    public void addHarmonyConstraint()
-    {
-        game.addHarmonyConstraint();
-    }
-
-    public void removeHarmonyConstraint()
-    {
-        game.removeHarmonyConstraint();
+        game.setConstraints(harmony, middleKingdom);
     }
 
     public void clearPlayers()

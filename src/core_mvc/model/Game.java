@@ -10,7 +10,8 @@ public class Game extends Observable
 
     private List<Domino> deck = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
-    private List<GameConstraint> gameConstraints = new ArrayList<>();
+    private boolean[] gameConstraints = new boolean[2];
+    private final List<GameConstraint> constraints = new ArrayList<>();
     private Player[] oldOrder;
     private Player[] newOrder;
     private Domino selectedDomino;
@@ -138,16 +139,21 @@ public class Game extends Observable
                 this.finished = true;
                 this.deck = new ArrayList<>();
                 this.players = new ArrayList<>();
-                this.gameConstraints = new ArrayList<>();
+                this.gameConstraints = new boolean[2];
             }
         }
     }
 
     private void calculateFinalScores()
     {
+        if (gameConstraints[0])
+            constraints.add(new Harmony());
+        if (gameConstraints[1])
+            constraints.add(new MiddleKingdom());
         for (Player p : this.players)
-            for (GameConstraint gc : gameConstraints)
-                gc.setNewScore(p);
+            for (GameConstraint gc : constraints)
+                if (gc.respects(p.getKingdom().getGrid()))
+                    gc.setNewScore(p);
     }
 
     public void createPlayer(String name)
@@ -162,35 +168,6 @@ public class Game extends Observable
         boolean done = numberOfRounds == 0;
         if (done)
             this.players.clear();
-    }
-
-    public void addHarmonyConstraint()
-    {
-        if (numberOfRounds == 0)
-            this.gameConstraints.add(new Harmony());
-    }
-
-    public void removeHarmonyConstraint()
-    {
-        if (numberOfRounds == 0)
-            this.gameConstraints.removeIf(gc -> gc instanceof Harmony);
-    }
-
-    public void addMiddleKingdomConstraint()
-    {
-        if (numberOfRounds == 0)
-            this.gameConstraints.add(new MiddleKingdom());
-    }
-
-    public void removeMiddleKingdomConstraint()
-    {
-        if (numberOfRounds == 0)
-            this.gameConstraints.removeIf(gc -> gc instanceof MiddleKingdom);
-    }
-
-    public List<GameConstraint> getGameConstraints()
-    {
-        return this.gameConstraints;
     }
 
     public List<Player> getPlayers()
@@ -228,5 +205,14 @@ public class Game extends Observable
         return this.finished;
     }
 
+    public void setConstraints(boolean harmony, boolean middleKingdom)
+    {
+        this.gameConstraints[0] = harmony;
+        this.gameConstraints[1] = middleKingdom;
+    }
 
+    public List<GameConstraint> getGameConstraints()
+    {
+        return this.constraints;
+    }
 }

@@ -8,6 +8,8 @@ import core_mvc.model.MiddleKingdom;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ParametersGUI extends JFrame
 {
@@ -94,19 +96,9 @@ public class ParametersGUI extends JFrame
             }
         });
 
-        harmonyMode.addActionListener(e -> {
-            if (harmonyMode.isSelected())
-                controller.addHarmonyConstraint();
-            else
-                controller.removeHarmonyConstraint();
-        });
-
-        middleKingdom.addActionListener(e -> {
-            if (middleKingdom.isSelected())
-                controller.addMiddleKingdomConstraint();
-            else
-                controller.removeMiddleKingdomConstraint();
-        });
+        ActionListener a = e -> controller.setGameConstraints(harmonyMode.isSelected(), middleKingdom.isSelected());
+        harmonyMode.addActionListener(a);
+        middleKingdom.addActionListener(a);
 
         this.setContentPane(bigPanel);
         this.setLocationRelativeTo(null);

@@ -8,10 +8,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.List;
 
 import static java.awt.Color.*;
 
@@ -53,8 +51,6 @@ public class GameView extends JFrame implements IObserver
     public void setUp()
     {
         this.started = true;
-
-        System.out.println("SET UP");
 
         this.kingdomButtons = new HashMap<>();
         this.kingdomsOwners = new HashMap<>();
@@ -161,7 +157,7 @@ public class GameView extends JFrame implements IObserver
         skipTurnButton.addActionListener(e -> {
             disableButtonsFor(game.getCurrentPlayer().getKingdom());
             controller.skipTurn();
-            playedTurn();
+            this.playedTurn();
             if (game.isFinished())
                 enableButtonsFor(game.getCurrentPlayer().getKingdom());
         });
@@ -231,8 +227,8 @@ public class GameView extends JFrame implements IObserver
             int finalI = i;
             ActionListener onSelectedDomino = e -> {
                 controller.setSelectedDomino(game.getWallet().getDominos().get(finalI));
-                paintSelectedDomino();
-                skipTurnButton.setVisible(true);
+                this.paintSelectedDomino();
+                this.skipTurnButton.setVisible(true);
             };
             buttons[0].addActionListener(onSelectedDomino);
             buttons[1].addActionListener(onSelectedDomino);

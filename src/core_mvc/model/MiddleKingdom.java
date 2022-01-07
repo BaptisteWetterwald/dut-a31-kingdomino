@@ -6,8 +6,7 @@ public class MiddleKingdom implements GameConstraint
     @Override
     public void setNewScore(Player p)
     {
-        if (respects(p.getKingdom().getGrid()))
-            p.setScore(p.getScore() + 10);
+        p.setScore(p.getScore() + 10);
     }
 
     @Override
