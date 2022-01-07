@@ -33,6 +33,7 @@ public class GameView extends JFrame implements IObserver
     private HashMap<Kingdom, JPanel> kingdomsSlideElementsPanel;
     private HashMap<Kingdom, JLabel> kingdomsLabels;
     private boolean started;
+    private JPanel rightPanel;
 
     public GameView(Game game, GameController controller)
     {
@@ -187,7 +188,7 @@ public class GameView extends JFrame implements IObserver
         else
             linePanel.add(kingdomsGridPanel);
 
-        JPanel rightPanel = new JPanel();
+        rightPanel = new JPanel();
         rightPanel.setLayout(new GridLayout(1, 2));
         rightPanel.add(instructionsAndModifyPanel);
 
@@ -234,7 +235,6 @@ public class GameView extends JFrame implements IObserver
             buttons[1].addActionListener(onSelectedDomino);
         }
         rightPanel.add(columnPanel);
-
 
         int gridWidth = game.getPlayers().get(0).getKingdom().getGrid()[0].length;
         int gridHeight = game.getPlayers().get(0).getKingdom().getGrid().length;
@@ -480,6 +480,7 @@ public class GameView extends JFrame implements IObserver
     private void end()
     {
         this.started = false;
+        rightPanel.remove(1);
         for (Player p : game.getPlayers())
             disableButtonsFor(p.getKingdom());
 

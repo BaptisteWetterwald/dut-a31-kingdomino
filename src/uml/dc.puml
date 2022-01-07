@@ -72,7 +72,7 @@ package model
         -numberOfRounds:Integer
         -playedTurnsInRound:Integer
         -finished:boolean
-        +start():
+        +start()
         +nextRound():
         +getCurrentRound():Integer
         +getNumberOfRounds():Integer
@@ -91,24 +91,24 @@ package model
         +setConstraints(harmony:boolean:middleKingdom:boolean):
         +getGameConstraints():GameConstraint[*]
 
-
-    }
-    interface GameConstraint
-    {
-       +setNewScore(p:Player)
-       +respects(grid:Tile[*])
     }
 
-    class Harmony implements GameConstraint
+    abstract class GameConstraint
     {
-            +setNewScore(p:Player):
-            +respects(grid:Tile[*]):boolean
+        -bonus:Integer
+        +setNewScore(p:Player)
+        +{abstract} respects(grid:Tile[*])
+    }
+
+    class Harmony extends GameConstraint
+    {
+        +respects(grid:Tile[*]):boolean
     }
 
     interface IObserver <<interface>>
-        {
-            +update(o:Observable)
-        }
+    {
+        +update(o:Observable)
+    }
 
     class Kingdom extends Observable
     {
@@ -125,9 +125,8 @@ package model
         +slideGridElements(direction:Integer)
     }
 
-    class MiddleKingdom implements GameConstraint
+    class MiddleKingdom extends GameConstraint
     {
-        +setNewScore(p:Player):
         +respects(grid:Tile[*]):boolean
     }
 
