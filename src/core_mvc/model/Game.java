@@ -136,10 +136,10 @@ public class Game extends Observable
                 for (Player p2 : this.players)
                     p2.getKingdom().notifyObservers();
                 this.notifyObservers();
-                this.finished = true;
+                /*this.finished = true;
                 this.deck = new ArrayList<>();
                 this.players = new ArrayList<>();
-                this.gameConstraints = new boolean[2];
+                this.gameConstraints = new boolean[2];*/
             }
         }
     }
