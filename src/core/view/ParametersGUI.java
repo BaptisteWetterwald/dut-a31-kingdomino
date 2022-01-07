@@ -25,12 +25,14 @@ public class ParametersGUI extends JFrame
     InputStream fileStream = this.getClass().getResourceAsStream("/kingdominoimg.png");
     InputStream img2 = this.getClass().getResourceAsStream("/Capture.png");
     Font font=new Font("Arial", Font.BOLD,15);
+    Font fontTitle=new Font("Arial", Font.BOLD,17);
+
 
     public ParametersGUI(Game game, ParametersController controller) {
         this.setTitle("\"Only kings play KingDomino\"");
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setMinimumSize(new Dimension(1118, 677));
+        this.setMinimumSize(new Dimension(1150, 677));
 
         JPanel bigPanel = new JPanel();
         JPanel p1 = new JPanel();
@@ -69,7 +71,7 @@ public class ParametersGUI extends JFrame
 
         JPanel nbPlayersSelection = new JPanel();
         TitledBorder nbPlayersBorder = BorderFactory.createTitledBorder("How many players");
-        nbPlayersBorder.setTitleFont(font);
+        nbPlayersBorder.setTitleFont(fontTitle);
         nbPlayersBorder.setTitleJustification(TitledBorder.CENTER);
         nbPlayersSelection.setBorder(nbPlayersBorder);
         nbPlayersSelection.setLayout(new BoxLayout(nbPlayersSelection, BoxLayout.Y_AXIS));
@@ -91,7 +93,7 @@ public class ParametersGUI extends JFrame
         JPanel modeSelection = new JPanel();
         modeSelection.setBackground(new Color(255, 255, 255, 150));
         TitledBorder mode = BorderFactory.createTitledBorder("Choose a game mode");
-        mode.setTitleFont(font);
+        mode.setTitleFont(fontTitle);
         mode.setTitleJustification(TitledBorder.CENTER);
         modeSelection.setBorder(mode);
         harmonyMode = new JCheckBox("Harmony");
@@ -142,7 +144,7 @@ public class ParametersGUI extends JFrame
         names = new JPanel();
         names.setLayout(new GridLayout(9, 0));
         TitledBorder namesTitle = BorderFactory.createTitledBorder("Enter the players names");
-        namesTitle.setTitleFont(font);
+        namesTitle.setTitleFont(fontTitle);
         namesTitle.setTitleJustification(TitledBorder.CENTER);
         bigPanel.add(p1);
         p2.add(names);
