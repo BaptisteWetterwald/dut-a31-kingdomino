@@ -8,9 +8,9 @@ public class Game extends Observable
 {
     Random random = new Random();
 
-    private List<Domino> deck = new ArrayList<>();
-    private List<Player> players = new ArrayList<>();
-    private boolean[] gameConstraints = new boolean[2];
+    private final List<Domino> deck = new ArrayList<>();
+    private final List<Player> players = new ArrayList<>();
+    private final boolean[] gameConstraints = new boolean[2];
     private final List<GameConstraint> constraints = new ArrayList<>();
     private Player[] oldOrder;
     private Player[] newOrder;
@@ -21,7 +21,6 @@ public class Game extends Observable
     private int currentRound;
     private int numberOfRounds;
     private int playedTurnsInRound;
-    private boolean finished = true;
 
     public void start()
     {
@@ -130,16 +129,10 @@ public class Game extends Observable
             }
             else
             {
-                //System.out.println("Adèle said \"This is the end... of the game!\"");
-
                 this.calculateFinalScores();
                 for (Player p2 : this.players)
                     p2.getKingdom().notifyObservers();
                 this.notifyObservers();
-                /*this.finished = true;
-                this.deck = new ArrayList<>();
-                this.players = new ArrayList<>();
-                this.gameConstraints = new boolean[2];*/
             }
         }
     }
@@ -198,11 +191,6 @@ public class Game extends Observable
     public void setSelectedDomino(Domino selectedDomino)
     {
         this.selectedDomino = selectedDomino;
-    }
-
-    public boolean isFinished()
-    {
-        return this.finished;
     }
 
     public void setConstraints(boolean harmony, boolean middleKingdom)

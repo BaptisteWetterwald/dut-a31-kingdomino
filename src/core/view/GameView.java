@@ -158,7 +158,7 @@ public class GameView extends JFrame implements IObserver
             disableButtonsFor(game.getCurrentPlayer().getKingdom());
             controller.skipTurn();
             this.playedTurn();
-            if (game.isFinished())
+            if (this.started)
                 enableButtonsFor(game.getCurrentPlayer().getKingdom());
         });
 
@@ -295,7 +295,7 @@ public class GameView extends JFrame implements IObserver
                         {
                             disableButtonsFor(old.getKingdom());
                             playedTurn();
-                            if (game.isFinished())
+                            if (this.started)
                                 enableButtonsFor(game.getCurrentPlayer().getKingdom());
                         }
                     });
@@ -471,10 +471,8 @@ public class GameView extends JFrame implements IObserver
 
     public void update()
     {
-        if (game.isFinished() && !this.started)
-        {
+        if (!this.started)
             this.setUp();
-        }
         else
             this.end();
     }

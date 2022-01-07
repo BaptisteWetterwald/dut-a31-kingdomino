@@ -5,8 +5,8 @@ import core.model.Game;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.*;
-
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -44,7 +44,6 @@ public class ParametersGUI extends JFrame
         p6.setLayout(new GridLayout(1, 0));
         p6.setOpaque(false);
 
-
         try {
             Image img = ImageIO.read(fileStream);
             this.setContentPane(new JPanel(new BorderLayout()) {
@@ -66,12 +65,10 @@ public class ParametersGUI extends JFrame
         p6.setBorder(new EmptyBorder(10, 0, 0, 10));
 
         JPanel nbPlayersSelection = new JPanel();
-        Border nbPlayers = BorderFactory.createTitledBorder("");
-        nbPlayers = BorderFactory.createTitledBorder(nbPlayers, "How many players:", 0, 0, new Font(Font.SERIF, Font.BOLD, 30));
-        nbPlayersSelection.setBorder(nbPlayers);
+        Border nbPlayersBorder = BorderFactory.createTitledBorder("How many players:");
+        nbPlayersSelection.setBorder(nbPlayersBorder);
         nbPlayersSelection.setLayout(new BoxLayout(nbPlayersSelection, BoxLayout.Y_AXIS));
         nbPlayersSelection.setBackground(new Color(255, 255, 255, 150));
-
 
         JRadioButton[] buttons = new JRadioButton[3];
         ButtonGroup group = new ButtonGroup();
@@ -81,26 +78,22 @@ public class ParametersGUI extends JFrame
             buttons[i].setOpaque(false);
             buttons[i].setRolloverEnabled(false);
             buttons[i].setFocusable(false);
-            buttons[i].setFont(new Font(Font.SERIF, Font.BOLD, 40));
 
             nbPlayersSelection.add(buttons[i]);
             group.add(buttons[i]);
         }
         JPanel modeSelection = new JPanel();
         modeSelection.setBackground(new Color(255, 255, 255, 150));
-        Border mode = BorderFactory.createTitledBorder("");
-        mode = BorderFactory.createTitledBorder(mode, "Choose a game mode:", 0, 0, new Font(Font.SERIF, Font.BOLD, 30));
+        Border mode = BorderFactory.createTitledBorder("Choose a game mode:");
         modeSelection.setBorder(mode);
         harmonyMode = new JCheckBox("Harmony");
         harmonyMode.setOpaque(false);
         harmonyMode.setRolloverEnabled(false);
         harmonyMode.setFocusable(false);
-        harmonyMode.setFont(new Font(Font.SERIF, Font.BOLD, 30));
         middleKingdom = new JCheckBox("MiddleKingdom");
         middleKingdom.setOpaque(false);
         middleKingdom.setRolloverEnabled(false);
         middleKingdom.setFocusable(false);
-        middleKingdom.setFont(new Font(Font.SERIF, Font.BOLD, 30));
 
         modeSelection.add(harmonyMode);
         modeSelection.add(middleKingdom);
@@ -137,15 +130,13 @@ public class ParametersGUI extends JFrame
         bigPanel.setLayout(new GridLayout(0, 2));
         names = new JPanel();
         names.setLayout(new GridLayout(9, 0));
-        Border namesTitle = BorderFactory.createTitledBorder("");
-        namesTitle = BorderFactory.createTitledBorder(namesTitle, "Enter the players names:", 0, 0, new Font(Font.SERIF, Font.BOLD, 30));
+        Border namesTitle = BorderFactory.createTitledBorder("Enter the players names:");
         bigPanel.add(p1);
         p2.add(names);
         bigPanel.add(p2);
         names.setBorder(namesTitle);
         names.setBackground(new Color(255, 255, 255, 150));
         JButton startButton = new JButton("Let's gooooo !");
-        startButton.setFont(new Font(Font.SERIF, Font.BOLD, 30));
         startButton.setBackground(new Color(255, 195, 0));
         p3.setOpaque(false);
         p3.add(startButton);
@@ -153,13 +144,14 @@ public class ParametersGUI extends JFrame
         for (Component r : nbPlayersSelection.getComponents())
             if (r instanceof JRadioButton)
                 ((JRadioButton) r).addActionListener(e -> {
-                    if (((JRadioButton) r).isSelected()) {
+                    if (((JRadioButton) r).isSelected())
+                    {
                         int id = Integer.parseInt(((JRadioButton) r).getText().substring(0, 1));
                         this.nbPlayers = Integer.parseInt(((JRadioButton) r).getText().substring(0, 1));
                         names.removeAll();
-                        for (int i = 0; i < id; i++) {
+                        for (int i = 0; i < id; i++)
+                        {
                             label = new JLabel("Player n°" + (i + 1));
-                            label.setFont(new Font(Font.SERIF, Font.BOLD, 30));
                             txt = new JTextField();
                             txt.setSize(10, 2);
                             names.add(label);
@@ -190,5 +182,7 @@ public class ParametersGUI extends JFrame
         this.add(bigPanel);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
     }
+
 }

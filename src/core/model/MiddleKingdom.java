@@ -1,12 +1,10 @@
 package core.model;
 
-public class MiddleKingdom implements GameConstraint
+public class MiddleKingdom extends GameConstraint
 {
-
-    @Override
-    public void setNewScore(Player p)
+    public MiddleKingdom()
     {
-        p.setScore(p.getScore() + 10);
+        super(10);
     }
 
     @Override

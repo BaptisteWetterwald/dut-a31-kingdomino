@@ -1,11 +1,10 @@
 package core.model;
 
-public class Harmony implements GameConstraint
-{
-    @Override
-    public void setNewScore(Player p)
+public class Harmony extends GameConstraint {
+
+    public Harmony()
     {
-        p.setScore(p.getScore() + 5);
+        super(5);
     }
 
     @Override

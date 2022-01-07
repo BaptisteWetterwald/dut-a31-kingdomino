@@ -1,7 +1,19 @@
 package core.model;
 
-public interface GameConstraint
+public abstract class GameConstraint
 {
-    void setNewScore(Player p);
-    boolean respects(Tile[][] grid);
+
+    private final int bonus;
+
+    public GameConstraint(int bonus)
+    {
+        this.bonus = bonus;
+    }
+
+    void setNewScore(Player p)
+    {
+        p.setScore(p.getScore() + this.bonus);
+    }
+    
+    public abstract boolean respects(Tile[][] grid);
 }
