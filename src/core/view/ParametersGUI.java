@@ -7,10 +7,12 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 
 public class ParametersGUI extends JFrame
 {
@@ -22,6 +24,7 @@ public class ParametersGUI extends JFrame
     private JTextField txt;
     InputStream fileStream = this.getClass().getResourceAsStream("/kingdominoimg.png");
     InputStream img2 = this.getClass().getResourceAsStream("/Capture.png");
+    Font font=new Font("Arial", Font.BOLD,15);
 
     public ParametersGUI(Game game, ParametersController controller) {
         this.setTitle("\"Only kings play KingDomino\"");
@@ -65,7 +68,9 @@ public class ParametersGUI extends JFrame
         p6.setBorder(new EmptyBorder(10, 0, 0, 10));
 
         JPanel nbPlayersSelection = new JPanel();
-        Border nbPlayersBorder = BorderFactory.createTitledBorder("How many players:");
+        TitledBorder nbPlayersBorder = BorderFactory.createTitledBorder("How many players");
+        nbPlayersBorder.setTitleFont(font);
+        nbPlayersBorder.setTitleJustification(TitledBorder.CENTER);
         nbPlayersSelection.setBorder(nbPlayersBorder);
         nbPlayersSelection.setLayout(new BoxLayout(nbPlayersSelection, BoxLayout.Y_AXIS));
         nbPlayersSelection.setBackground(new Color(255, 255, 255, 150));
@@ -76,6 +81,7 @@ public class ParametersGUI extends JFrame
             buttons[i] = new JRadioButton((2 + i) + " players");
             buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT);
             buttons[i].setOpaque(false);
+            buttons[i].setFont(font);
             buttons[i].setRolloverEnabled(false);
             buttons[i].setFocusable(false);
 
@@ -84,16 +90,21 @@ public class ParametersGUI extends JFrame
         }
         JPanel modeSelection = new JPanel();
         modeSelection.setBackground(new Color(255, 255, 255, 150));
-        Border mode = BorderFactory.createTitledBorder("Choose a game mode:");
+        TitledBorder mode = BorderFactory.createTitledBorder("Choose a game mode:");
+        mode.setTitleFont(font);
+        mode.setTitleJustification(TitledBorder.CENTER);
         modeSelection.setBorder(mode);
         harmonyMode = new JCheckBox("Harmony");
         harmonyMode.setOpaque(false);
         harmonyMode.setRolloverEnabled(false);
+        harmonyMode.setFont(font);
         harmonyMode.setFocusable(false);
         middleKingdom = new JCheckBox("MiddleKingdom");
         middleKingdom.setOpaque(false);
         middleKingdom.setRolloverEnabled(false);
         middleKingdom.setFocusable(false);
+        middleKingdom.setFont(font);
+
 
         modeSelection.add(harmonyMode);
         modeSelection.add(middleKingdom);
@@ -130,7 +141,9 @@ public class ParametersGUI extends JFrame
         bigPanel.setLayout(new GridLayout(0, 2));
         names = new JPanel();
         names.setLayout(new GridLayout(9, 0));
-        Border namesTitle = BorderFactory.createTitledBorder("Enter the players names:");
+        TitledBorder namesTitle = BorderFactory.createTitledBorder("Enter the players names:");
+        namesTitle.setTitleFont(font);
+        namesTitle.setTitleJustification(TitledBorder.CENTER);
         bigPanel.add(p1);
         p2.add(names);
         bigPanel.add(p2);
@@ -152,6 +165,7 @@ public class ParametersGUI extends JFrame
                         for (int i = 0; i < id; i++)
                         {
                             label = new JLabel("Player n°" + (i + 1));
+                            label.setFont(font);
                             txt = new JTextField();
                             txt.setSize(10, 2);
                             names.add(label);
