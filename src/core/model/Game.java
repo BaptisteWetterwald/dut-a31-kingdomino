@@ -6,7 +6,7 @@ import java.util.*;
 
 public class Game extends Observable
 {
-    Random random = new Random();
+    private final Random random = new Random();
 
     private final List<Domino> deck = new ArrayList<>();
     private final List<Player> players = new ArrayList<>();
@@ -25,7 +25,6 @@ public class Game extends Observable
     public void start()
     {
         this.currentRound = 0;
-
         this.clickedTileIndex = -1;
         int nbPlayers = this.players.size();
         wallet = new Wallet(nbPlayers%2 == 0 ? 4 : 3);

@@ -11,14 +11,6 @@ public class Kingdom extends Observable
     {
         this.grid = new Tile[height][width];
         grid[height/2][width/2] = new Castle();
-        /*
-             0 1 2 3 4
-           0 x x x x x
-           1 x x x x x
-           2 x x C x x
-           3 x x x x x
-           4 x x x x x
-       */
     }
 
     public Tile[][] getGrid()
@@ -26,7 +18,7 @@ public class Kingdom extends Observable
         return this.grid;
     }
 
-    public boolean tryDominoPlacement(int lineIndex, int columnIndex, Domino domino, int clickedTileIndex, Player p)
+    public boolean tryDominoPlacement(int lineIndex, int columnIndex, Domino domino, int clickedTileIndex)
     {
         boolean res = false;
         if (domino != null)

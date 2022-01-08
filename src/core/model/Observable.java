@@ -5,12 +5,7 @@ import java.util.List;
 
 public abstract class Observable
 {
-    private final List<IObserver> observers;
-
-    public Observable()
-    {
-        observers = new ArrayList<>();
-    }
+    private final List<IObserver> observers = new ArrayList<>();
 
     public void notifyObservers()
     {

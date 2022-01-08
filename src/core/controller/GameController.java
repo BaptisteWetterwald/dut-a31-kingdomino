@@ -36,7 +36,7 @@ public class GameController
 
     public boolean tryDominoPlacement(int finalI, int finalJ)
     {
-        boolean done = game.getCurrentPlayer().getKingdom().tryDominoPlacement(finalI, finalJ, game.getSelectedDomino(), game.getClickedTileIndex(), game.getCurrentPlayer());
+        boolean done = game.getCurrentPlayer().getKingdom().tryDominoPlacement(finalI, finalJ, game.getSelectedDomino(), game.getClickedTileIndex());
         if (done)
             game.playedTurn();
         return done;

@@ -1,6 +1,7 @@
 package core.model;
 
-public class Harmony extends GameConstraint {
+public class Harmony extends GameConstraint
+{
 
     public Harmony()
     {

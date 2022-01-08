@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-
 public class ParametersGUI extends JFrame
 {
     private final JPanel names;
@@ -22,8 +21,6 @@ public class ParametersGUI extends JFrame
     private int nbPlayers;
     private JLabel label;
     private JTextField txt;
-    InputStream fileStream = this.getClass().getResourceAsStream("/kingdominoimg.png");
-    InputStream img2 = this.getClass().getResourceAsStream("/Capture.png");
     private final Font smallButtonsFont = new Font("Arial", Font.PLAIN,15);
     private final Font smallTitlesFont = new Font("Arial", Font.BOLD,17);
     private final Font largeButtonsFont = new Font("Arial", Font.PLAIN, 35);
@@ -34,7 +31,8 @@ public class ParametersGUI extends JFrame
     private boolean smallResolution = true;
     private final JButton changeFont;
 
-    public ParametersGUI(Game game, ParametersController controller) {
+    public ParametersGUI(Game game, ParametersController controller)
+    {
         this.setTitle("\"Only kings play KingDomino\"");
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -56,6 +54,7 @@ public class ParametersGUI extends JFrame
         p6.setOpaque(false);
 
         try {
+            InputStream fileStream = this.getClass().getResourceAsStream("/kingdominoimg.png");
             Image img = ImageIO.read(fileStream);
             this.setContentPane(new JPanel(new BorderLayout()) {
                 @Override
@@ -137,6 +136,7 @@ public class ParametersGUI extends JFrame
         panel.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         try {
+            InputStream img2 = this.getClass().getResourceAsStream("/Capture.png");
             Image img3 = ImageIO.read(img2);
             p6.add(new JPanel(new BorderLayout()) {
                 @Override

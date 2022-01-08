@@ -1,6 +1,7 @@
 @startuml
-'https://plantuml.com/class-diagram
 
+skinparam style strictuml
+skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide enum methods
 
@@ -9,30 +10,35 @@ package view
     class GameView implements IObserver
     {
         -started:boolean
-        +GameView()
-        +setUp():
-        -disableButtonsFor(kingdom:Kingdom):
-        -enableButtonsFor(kingdom:Kingdom):
-        -updateRoundCounter():
-        -playedTurn():
-        -writeInstructionTitle():
-        -getColorOfTile(tile: Tile):Color
-        -paintSelectedDomino():
-        +update(o:Observable):
-        +update(kingdom:Kingdom):
-        +update(wallet:Wallet):
-        +update():
-        -end():
+
+        +GameView(game:Game, controller:GameController)
+        -disableButtonsFor(kingdom:Kingdom)
+        -enableButtonsFor(kingdom:Kingdom)
+        -playedTurn()
+        -writeInstructionTitle()
+        -getColorOfTile(tile:Tile):Color
+        -paintSelectedDomino()
+        -end()
+        -update(kingdom:Kingdom)
+        -update(wallet:Wallet)
+        -update()
+        +update(o:Observable)
+        +setUp()
     }
 
     class ParametersGUI
     {
-        +ParametersGUI()
+        -smallResolution:boolean
+        -nbPlayers:Integer
+
+        +ParametersGUI(game:Game, controller:ParametersController)
+        -changeFont()
     }
 }
 
 package model
 {
+
     enum Biome <<enum>>
     {
         CASTLE
@@ -42,7 +48,7 @@ package model
         GRASS
         SWAMP
         MINE
-        +parse()
+        +parse(s:String):Biome
     }
 
     class Castle extends Tile
@@ -54,16 +60,18 @@ package model
     {
         -id:Integer
         -horizontal:boolean
+
         +Domino(id:Integer, t1:Tile, t2:Tile)
+        -switchTiles()
         +getId():Integer
         +getTiles():Tile[*]
         +toString():String
         +flipRight()
         +flip180()
         +flipLeft()
-        +switchTiles()
         +isHorizontal():boolean
     }
+
     class Game extends Observable
     {
         -gameConstraints:boolean[*]
@@ -71,26 +79,24 @@ package model
         -currentRound:Integer
         -numberOfRounds:Integer
         -playedTurnsInRound:Integer
-        -finished:boolean
+
+        -nextRound()
+        -calculateFinalScores()
         +start()
-        +nextRound():
         +getCurrentRound():Integer
         +getNumberOfRounds():Integer
         +getCurrentPlayer():Player
-        +playedTurn():
-        -calculateFinalScores():
-        +createPlayer(name:String):
-        +clearPlayer():
+        +playedTurn()
+        +createPlayer(name:String)
+        +clearPlayers()
         +getPlayers():Players[*]
         +getWallet():Wallet
-        +setClickedTileIndex(clickedTileIndex:Integer):
+        +setClickedTileIndex(clickedTileIndex:Integer)
         +getClickedTileIndex():Integer
         +getSelectedDomino():Domino
-        +setSelectedDomino(selectedDomino:Domino ):
-        +isFinished():boolean
-        +setConstraints(harmony:boolean:middleKingdom:boolean):
+        +setSelectedDomino(selectedDomino:Domino)
+        +setConstraints(harmony:boolean, middleKingdom:boolean)
         +getGameConstraints():GameConstraint[*]
-
     }
 
     abstract class GameConstraint
@@ -102,6 +108,7 @@ package model
 
     class Harmony extends GameConstraint
     {
+        +Harmony()
         +respects(grid:Tile[*]):boolean
     }
 
@@ -113,34 +120,35 @@ package model
     class Kingdom extends Observable
     {
         +Kingdom(height:Integer,width:Integer)
-        +getGrid():Tile[*]
-        +tryDominoPlacement(lineIndex:Integer,columnIndex:Integer,
-        domino:Domino,clickedTileIndex:Integer,p:Player)
-        +hasValidNeighbor(t1:Tile, l:Integer, c:Integer):boolean
-        +calculateScore():Integer
-        +fillTerrainOfTile(terrain:Tile[*], untreated:Integer[*])
+        -fillTerrainOfTile(terrain:Tile[*], untreated:Integer[*])
+        -getFirstUntreatedTile(terrains:Tile[*]):Integer[*]
         -addNeighbor(neighbors:Integer[*], terrain:Tile[*],
         l:Integer, c:Integer, l2:Integer, c2:Integer)
-        -getFirstUntreatedTile(terrains:Tile[*]):Integer[*]
+        +getGrid():Tile[*]
+        +tryDominoPlacement(lineIndex:Integer,columnIndex:Integer,
+        domino:Domino,clickedTileIndex:Integer)
+        +hasValidNeighbor(t1:Tile, l:Integer, c:Integer):boolean
+        +calculateScore():Integer
         +slideGridElements(direction:Integer)
     }
 
     class MiddleKingdom extends GameConstraint
     {
+        +MiddleKingdom()
         +respects(grid:Tile[*]):boolean
     }
 
     abstract class Observable <<abstract>>
-        {
-            +Observable()
-            +notifyObservers()
-            +addObserver(observer:IObserver)
-        }
+    {
+        +notifyObservers()
+        +addObserver(observer:IObserver)
+    }
 
     class Player
     {
         -name:String
         -score:Integer
+
         +Player(name:String)
         +getName():String
         +setKingdom(kingdom:Kingdom)
@@ -152,7 +160,8 @@ package model
 
     class Tile
     {
-        - crowns : Integer
+        -crowns:Integer
+
         +Tile(biome:Biome, crowns:Integer)
         +toString():String
         +getBiome():Biome
@@ -163,6 +172,7 @@ package model
     class Wallet extends Observable
     {
         -size:Integer
+
         +Wallet(size:Integer)
         +getSize():Integer
         +getDominos():Domino[*]
@@ -177,61 +187,135 @@ package controller
     class GameController
     {
         +GameController(game:Game)
-        +flipLeft():
-        +flipRight():
-        +flip180():
-        +tryDominoPlacement(finalI: Integer,finalJ: Integer):boolean
-        + makeLeaderboard():
-        +slideKingdom(kingdom:Kingdom,finalI:Integer):
-        +setSelectedDomino(domino:Domino):
-        +setClickedTileIndex(clickedTileIndex:Integer):
-        +skipTurn():
-        +addObserver(observable:Observable,observer:IObserver):
+        +flipLeft()
+        +flipRight()
+        +flip180()
+        +tryDominoPlacement(finalI:Integer, finalJ:Integer):boolean
+        +makeLeaderboard()
+        +slideKingdom(kingdom:Kingdom, finalI:Integer)
+        +setSelectedDomino(domino:Domino)
+        +setClickedTileIndex(clickedTileIndex:Integer)
+        +skipTurn()
+        +addObserver(observable:Observable, observer:IObserver)
     }
 
     class ParametersController
     {
         +ParametersController(game:Game)
         +startGame()
-        +addPlayer(s:String):
-        +setGameConstraint(harmony:boolean,middleKingdom:boolean):
-        +clearPlayers():
+        +addPlayer(s:String)
+        +setGameConstraint(harmony:boolean, middleKingdom:boolean)
+        +clearPlayers()
     }
-
-
 }
+
 package utilities
 {
- class CSVReader
+    class CSVReader
     {
-        +CSVReader()
+        -{static}INSTANCE:CSVReader
+        -CSVReader()
+        +{static}getInstance():CSVReader
         +generateDominos():Domino[*]
     }
 }
 
-'Domino *--> "2" Tile : > tiles[*]
-'Game *--> "12..48" Domino :  >  deck[*]
-'Game *--> "2..4" Player :  >  players[*]
-'Game *--> "2..4" Player : > newOrder[*]
-'Game *--> "1" Board : > board
-'Game *--> "1" Wallet :  >  wallet
-'Game ..> IObserver : <<use>>
-'Kingdom *--> Tile :  >  grid[*]
-'ParametersGUI *--> "2..4" Player:  >  players[*]
-'Player o--> "1"Kingdom :   kingdom
-'Tile *--> "1" Biome :  >  biome
-'Wallet *--> "3..4" Domino :  >  dominos[*]
-'Board o--> "0..1" Domino :  > selectedDomino
-'App  .> Game : <<use>>
-'Game .> CSVReader : <<use>>
-'Game ..> ParametersGUI : <<use>>
-'Player o--> "1" Domino : > lastPlayedDomino
-'Wallet *--> "0..4" Domino : > used[*]
-'Kingdom ..> "1" Castle : <<use>>
-'Observable o-up-> IObserver : > observers[*]
-'KingdomObserver ..> Board : <<use>>
-'KingdomObserver ..> Player : <<use>>
-'WalletObserver ..> Wallet : <<use>>
-'WalletObserver ..> Board : <<use>>
+class App
+{
+    +{static}main(args:String[*])
+}
+
+'-------------------------------------
+App .> Game : > <<creates>>
+App ..> ParametersController : > <<creates>>
+App .> ParametersGUI : > <<creates>>
+
+'-------------------------------------
+
+ParametersGUI .> Game : > <<use>>
+ParametersGUI .up.> GameController : > <<use>>
+
+'-------------------------------------
+
+GameView .> Game : > <<use>>
+GameView .up.> GameController : > <<use>>
+GameView .> Wallet : > <<use>>
+GameView .> Kingdom : > <<use>>
+GameView .> Observable : > <<use>>
+GameView .> Tile : > <<use>>
+
+'-------------------------------------
+
+CSVReader .up.> Domino : > <<creates>>
+CSVReader .up.> Biome : > <<use>>
+CSVReader .up.> Tile : > <<use>>
+CSVReader .> CSVReader : > <<creates>>
+
+'-------------------------------------
+
+Wallet *-left-> "3..4 \n-dominos[*]" Domino : > contains
+Wallet *-> "3..4\n-used[*]" Domino : > contains
+
+'-------------------------------------
+
+Tile *-> "-biome" Biome  : > represents
+
+'-------------------------------------
+
+Player o-down-> "1\nkingdom" Kingdom : > has
+
+'-------------------------------------
+
+Observable o-> "-observers[*]" IObserver : > can notify
+
+'-------------------------------------
+
+MiddleKingdom .right.> Tile : > <<use>>
+
+'-------------------------------------
+
+Kingdom *-down-> "25\n-grid[*]" Tile : > is made of
+Kingdom .> Domino : > <<use>>
+
+'-------------------------------------
+
+Harmony .right.> Tile : > <<use>>
+
+'-------------------------------------
+
+GameConstraint .> Player : > <<use>>
+GameConstraint .> Tile : > <<use>>
+
+'-------------------------------------
+
+Game *-> "deck" Domino : > uses
+Game *--> "2..4\n-players" Player : > makes play
+Game o-> "0..2\n-constraints" GameConstraint : > can have
+Game *--> "3..4\n-oldOrder" Player : > uses
+Game *--> "3..4\n-newOrder" Player : > uses
+Game *-left-> "0..1\n-selectedDomino" Domino : > uses
+Game *--> "0..1\n-currentPlayer" Player : > uses
+Game *-> "1\n-wallet" Wallet : > uses
+Game .down.> CSVReader : > <<use>>
+
+'-------------------------------------
+
+Domino *-right-> "2\n-tiles" Tile : > is made of
+
+'-------------------------------------
+
+Castle .> Biome : > <<use>>
+
+'-------------------------------------
+
+ParametersController *-> "1\n-game" Game : > modifies parameters of
+ParametersController .> GameView : > <<creates>>
+
+'-------------------------------------
+
+GameController *-> "1\n-game" Game : > manages
+GameController .> Kingdom : > <<use>>
+GameController .> Observable : > <<use>>
+GameController .> IObserver : > <<use>>
 
 @enduml

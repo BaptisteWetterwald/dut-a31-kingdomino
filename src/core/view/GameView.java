@@ -142,7 +142,7 @@ public class GameView extends JFrame implements IObserver
         instructionsLabels[4].setText("(this will ban the domino)");
 
         roundCounterLabel = new JLabel();
-        updateRoundCounter();
+        this.roundCounterLabel.setText("Round " + game.getCurrentRound() + "/" + game.getNumberOfRounds());
         roundCounterLabel.setFont(new Font(Font.SERIF, Font.BOLD, 30));
         roundCounterLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         instructionsPanel.add(roundCounterLabel);
@@ -348,18 +348,13 @@ public class GameView extends JFrame implements IObserver
                 b2.setEnabled(true);
     }
 
-    private void updateRoundCounter()
-    {
-        this.roundCounterLabel.setText("Round " + game.getCurrentRound() + "/" + game.getNumberOfRounds());
-    }
-
     private void playedTurn()
     {
         controller.setSelectedDomino(null);
         writeInstructionTitle();
         paintSelectedDomino();
         this.skipTurnButton.setVisible(false);
-        updateRoundCounter();
+        this.roundCounterLabel.setText("Round " + game.getCurrentRound() + "/" + game.getNumberOfRounds());
         game.getWallet().notifyObservers();
     }
 
@@ -393,8 +388,7 @@ public class GameView extends JFrame implements IObserver
 
     private void paintSelectedDomino()
     {
-        Domino domino = game.getSelectedDomino();
-        if (domino == null)
+        if (game.getSelectedDomino() == null)
         {
             selectedDominoButtons[0][0].setVisible(false);
             selectedDominoButtons[0][1].setVisible(false);
@@ -405,21 +399,21 @@ public class GameView extends JFrame implements IObserver
         {
             modifyDominoPanel.setVisible(true);
             selectedDominoButtons[0][0].setVisible(true);
-            selectedDominoButtons[0][0].setBackground(this.getColorOfTile(domino.getTiles()[0]));
-            selectedDominoButtons[0][0].setText(domino.getTiles()[0].getCrownsAsString());
-            if (domino.isHorizontal())
+            selectedDominoButtons[0][0].setBackground(this.getColorOfTile(game.getSelectedDomino().getTiles()[0]));
+            selectedDominoButtons[0][0].setText(game.getSelectedDomino().getTiles()[0].getCrownsAsString());
+            if (game.getSelectedDomino().isHorizontal())
             {
                 selectedDominoButtons[0][1].setVisible(true);
                 selectedDominoButtons[1][0].setVisible(false);
-                selectedDominoButtons[0][1].setBackground(this.getColorOfTile(domino.getTiles()[1]));
-                selectedDominoButtons[0][1].setText(domino.getTiles()[1].getCrownsAsString());
+                selectedDominoButtons[0][1].setBackground(this.getColorOfTile(game.getSelectedDomino().getTiles()[1]));
+                selectedDominoButtons[0][1].setText(game.getSelectedDomino().getTiles()[1].getCrownsAsString());
             }
             else
             {
                 selectedDominoButtons[0][1].setVisible(false);
                 selectedDominoButtons[1][0].setVisible(true);
-                selectedDominoButtons[1][0].setBackground(this.getColorOfTile(domino.getTiles()[1]));
-                selectedDominoButtons[1][0].setText(domino.getTiles()[1].getCrownsAsString());
+                selectedDominoButtons[1][0].setBackground(this.getColorOfTile(game.getSelectedDomino().getTiles()[1]));
+                selectedDominoButtons[1][0].setText(game.getSelectedDomino().getTiles()[1].getCrownsAsString());
             }
         }
     }
@@ -433,9 +427,9 @@ public class GameView extends JFrame implements IObserver
             update((Wallet) o);
         else if (o instanceof Game)
             update();
-}
+    }
 
-    public void update(Kingdom kingdom)
+    private void update(Kingdom kingdom)
     {
         int gridWidth = game.getPlayers().get(0).getKingdom().getGrid()[0].length;
         int gridHeight = game.getPlayers().get(0).getKingdom().getGrid().length;
@@ -453,7 +447,7 @@ public class GameView extends JFrame implements IObserver
         kingdomsLabels.get(owner.getKingdom()).setText("Kingdom of " + owner + " [" + owner.getScore() + "]");
     }
 
-    public void update(Wallet wallet)
+    private void update(Wallet wallet)
     {
         for (int i=0; i<wallet.getDominos().size(); i++)
         {
@@ -461,7 +455,6 @@ public class GameView extends JFrame implements IObserver
             {
                 Tile t = wallet.getDominos().get(i).getTiles()[j];
                 JButton b = walletMap.get(dominosPanel[i])[j];
-                //b.setForeground(t.getCrowns() == 0 ? b.getBackground() : Color.BLACK);
                 b.setBackground(this.getColorOfTile(t));
                 b.setText(t.getCrownsAsString());
             }
@@ -469,7 +462,7 @@ public class GameView extends JFrame implements IObserver
         }
     }
 
-    public void update()
+    private void update()
     {
         if (!this.started)
             this.setUp();

@@ -28,7 +28,6 @@ public class Domino
     public String toString()
     {
         return this.getId() + " | " + this.tiles[0].toString() + " | " + this.tiles[1].toString();
-        //return String.valueOf(this.getId());
     }
 
     public void flip180()
