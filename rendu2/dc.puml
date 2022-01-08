@@ -70,6 +70,7 @@ package model
 
     abstract class GameConstraint
     {
+        +GameConstraint(bonus:Integer)
         -bonus:Integer
         +setNewScore(p:Player)
         +{abstract} respects(grid:Tile[*])
