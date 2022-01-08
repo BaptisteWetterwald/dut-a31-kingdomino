@@ -5,14 +5,14 @@ import core.model.Game;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serial;
+import java.util.ArrayList;
+
 
 public class ParametersGUI extends JFrame
 {
@@ -24,9 +24,15 @@ public class ParametersGUI extends JFrame
     private JTextField txt;
     InputStream fileStream = this.getClass().getResourceAsStream("/kingdominoimg.png");
     InputStream img2 = this.getClass().getResourceAsStream("/Capture.png");
-    Font font=new Font("Arial", Font.BOLD,15);
-    Font fontTitle=new Font("Arial", Font.BOLD,17);
+    private final Font smallButtonsFont = new Font("Arial", Font.PLAIN,15);
+    private final Font smallTitlesFont = new Font("Arial", Font.BOLD,17);
+    private final Font largeButtonsFont = new Font("Arial", Font.PLAIN, 35);
+    private final Font largeTitlesFont = new Font("Arial", Font.BOLD, 45);
 
+    private final ArrayList<TitledBorder> titles = new ArrayList<>();
+    private final ArrayList<Component> buttonsAndLabels = new ArrayList<>();
+    private boolean smallResolution = true;
+    private final JButton changeFont;
 
     public ParametersGUI(Game game, ParametersController controller) {
         this.setTitle("\"Only kings play KingDomino\"");
@@ -70,8 +76,8 @@ public class ParametersGUI extends JFrame
         p6.setBorder(new EmptyBorder(10, 0, 0, 10));
 
         JPanel nbPlayersSelection = new JPanel();
-        TitledBorder nbPlayersBorder = BorderFactory.createTitledBorder("How many players");
-        nbPlayersBorder.setTitleFont(fontTitle);
+        TitledBorder nbPlayersBorder = BorderFactory.createTitledBorder("How many players?");
+        titles.add(nbPlayersBorder);
         nbPlayersBorder.setTitleJustification(TitledBorder.CENTER);
         nbPlayersSelection.setBorder(nbPlayersBorder);
         nbPlayersSelection.setLayout(new BoxLayout(nbPlayersSelection, BoxLayout.Y_AXIS));
@@ -79,42 +85,58 @@ public class ParametersGUI extends JFrame
 
         JRadioButton[] buttons = new JRadioButton[3];
         ButtonGroup group = new ButtonGroup();
-        for (int i = 0; i < buttons.length; i++) {
+        for (int i = 0; i < buttons.length; i++)
+        {
             buttons[i] = new JRadioButton((2 + i) + " players");
             buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT);
             buttons[i].setOpaque(false);
-            buttons[i].setFont(font);
             buttons[i].setRolloverEnabled(false);
             buttons[i].setFocusable(false);
+            this.buttonsAndLabels.add(buttons[i]);
 
             nbPlayersSelection.add(buttons[i]);
             group.add(buttons[i]);
         }
         JPanel modeSelection = new JPanel();
         modeSelection.setBackground(new Color(255, 255, 255, 150));
+        modeSelection.setLayout(new BoxLayout(modeSelection, BoxLayout.Y_AXIS));
+
         TitledBorder mode = BorderFactory.createTitledBorder("Choose a game mode");
-        mode.setTitleFont(fontTitle);
+        this.titles.add(mode);
         mode.setTitleJustification(TitledBorder.CENTER);
         modeSelection.setBorder(mode);
+
         harmonyMode = new JCheckBox("Harmony");
         harmonyMode.setOpaque(false);
         harmonyMode.setRolloverEnabled(false);
-        harmonyMode.setFont(font);
         harmonyMode.setFocusable(false);
+        buttonsAndLabels.add(harmonyMode);
+
         middleKingdom = new JCheckBox("MiddleKingdom");
         middleKingdom.setOpaque(false);
         middleKingdom.setRolloverEnabled(false);
         middleKingdom.setFocusable(false);
-        middleKingdom.setFont(font);
+        buttonsAndLabels.add(middleKingdom);
 
+        changeFont = new JButton("Titles are too large? Click here!");
+        changeFont.setFocusable(false);
+        changeFont.addActionListener(e -> {
+            changeFont();
+        });
+        changeFont.setFont(smallButtonsFont);
 
         modeSelection.add(harmonyMode);
         modeSelection.add(middleKingdom);
+        modeSelection.add(changeFont);
+
+        harmonyMode.setAlignmentX(Component.CENTER_ALIGNMENT);
+        middleKingdom.setAlignmentX(Component.CENTER_ALIGNMENT);
+        changeFont.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new GridLayout(3, 0));
         panel.setBorder(new EmptyBorder(20, 0, 0, 0));
-
 
         try {
             Image img3 = ImageIO.read(img2);
@@ -138,13 +160,12 @@ public class ParametersGUI extends JFrame
         panel.add(p5);
         p1.add(panel);
 
-
         bigPanel.setOpaque(false);
         bigPanel.setLayout(new GridLayout(0, 2));
         names = new JPanel();
         names.setLayout(new GridLayout(9, 0));
         TitledBorder namesTitle = BorderFactory.createTitledBorder("Enter the players names");
-        namesTitle.setTitleFont(fontTitle);
+        titles.add(namesTitle);
         namesTitle.setTitleJustification(TitledBorder.CENTER);
         bigPanel.add(p1);
         p2.add(names);
@@ -152,6 +173,7 @@ public class ParametersGUI extends JFrame
         names.setBorder(namesTitle);
         names.setBackground(new Color(255, 255, 255, 150));
         JButton startButton = new JButton("Let's gooooo !");
+        buttonsAndLabels.add(startButton);
         startButton.setBackground(new Color(255, 195, 0));
         p3.setOpaque(false);
         p3.add(startButton);
@@ -167,9 +189,12 @@ public class ParametersGUI extends JFrame
                         for (int i = 0; i < id; i++)
                         {
                             label = new JLabel("Player n°" + (i + 1));
-                            label.setFont(font);
+                            label.setFont(this.smallResolution ? this.smallButtonsFont : this.largeButtonsFont);
+                            buttonsAndLabels.add(label);
                             txt = new JTextField();
+                            buttonsAndLabels.add(txt);
                             txt.setSize(10, 2);
+                            txt.setFont(this.smallResolution ? this.smallButtonsFont : this.largeButtonsFont);
                             names.add(label);
                             names.add(txt);
                             names.add(p3);
@@ -199,6 +224,19 @@ public class ParametersGUI extends JFrame
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
+        this.changeFont();
+    }
+
+    private void changeFont()
+    {
+        this.smallResolution = !this.smallResolution;
+        for (TitledBorder tb : titles)
+            tb.setTitleFont(this.smallResolution ? this.smallTitlesFont : this.largeTitlesFont);
+        for (Component c : buttonsAndLabels)
+            c.setFont(this.smallResolution ? this.smallButtonsFont : this.largeButtonsFont);
+
+        this.changeFont.setText("Titles are too " + (this.smallResolution ? "small" : "large") + "? Click here!");
+        repaint();
     }
 
 }
