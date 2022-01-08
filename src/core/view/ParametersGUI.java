@@ -127,15 +127,13 @@ public class ParametersGUI extends JFrame
 
         modeSelection.add(harmonyMode);
         modeSelection.add(middleKingdom);
-        modeSelection.add(changeFont);
 
         harmonyMode.setAlignmentX(Component.CENTER_ALIGNMENT);
         middleKingdom.setAlignmentX(Component.CENTER_ALIGNMENT);
-        changeFont.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JPanel panel = new JPanel();
         panel.setOpaque(false);
-        panel.setLayout(new GridLayout(3, 0));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(20, 0, 0, 0));
 
         try {
@@ -158,6 +156,8 @@ public class ParametersGUI extends JFrame
         panel.add(p6);
         panel.add(p4);
         panel.add(p5);
+        panel.add(changeFont);
+        changeFont.setAlignmentX(Component.CENTER_ALIGNMENT);
         p1.add(panel);
 
         bigPanel.setOpaque(false);
