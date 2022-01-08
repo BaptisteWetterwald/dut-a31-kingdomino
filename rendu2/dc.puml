@@ -5,37 +5,6 @@ skinparam classAttributeIconSize 0
 skinparam classFontStyle Bold
 hide enum methods
 
-package view
-{
-    class GameView implements IObserver
-    {
-        -started:boolean
-
-        +GameView(game:Game, controller:GameController)
-        -disableButtonsFor(kingdom:Kingdom)
-        -enableButtonsFor(kingdom:Kingdom)
-        -playedTurn()
-        -writeInstructionTitle()
-        -getColorOfTile(tile:Tile):Color
-        -paintSelectedDomino()
-        -end()
-        -update(kingdom:Kingdom)
-        -update(wallet:Wallet)
-        -update()
-        +update(o:Observable)
-        +setUp()
-    }
-
-    class ParametersGUI
-    {
-        -smallResolution:boolean
-        -nbPlayers:Integer
-
-        +ParametersGUI(game:Game, controller:ParametersController)
-        -changeFont()
-    }
-}
-
 package model
 {
 
@@ -206,6 +175,37 @@ package controller
         +addPlayer(s:String)
         +setGameConstraint(harmony:boolean, middleKingdom:boolean)
         +clearPlayers()
+    }
+}
+
+package view
+{
+    class GameView implements IObserver
+    {
+        -started:boolean
+
+        +GameView(game:Game, controller:GameController)
+        -disableButtonsFor(kingdom:Kingdom)
+        -enableButtonsFor(kingdom:Kingdom)
+        -playedTurn()
+        -writeInstructionTitle()
+        -getColorOfTile(tile:Tile):Color
+        -paintSelectedDomino()
+        -end()
+        -update(kingdom:Kingdom)
+        -update(wallet:Wallet)
+        -update()
+        +update(o:Observable)
+        +setUp()
+    }
+
+    class ParametersGUI
+    {
+        -smallResolution:boolean
+        -nbPlayers:Integer
+
+        +ParametersGUI(game:Game, controller:ParametersController)
+        -changeFont()
     }
 }
 
