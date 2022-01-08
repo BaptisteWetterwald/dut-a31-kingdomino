@@ -2,7 +2,7 @@ _Baptiste WETTERWALD - Hamza LOUADA - Groupe 2_
 
 # **Rapport A31 - Version 2 (09/01/2022)**
 
-## **Présentation des classes :**
+## **Présentation des classes (listées dans l'ordre proposé par IntelliJ) :**
 
 ## **Package Controller :**
 
@@ -99,7 +99,6 @@ Fenêtre permettant à l’utilisateur de choisir le nombre de joueurs et leur p
 
 
 - Nous utilisons également le patron “Observer” : GameView observe Game, Wallet et Kingdom. Ceci permet de ne mettre à jour que certains éléments dans l’affichage réalisé par GameView, lorsque c’est nécessaire. Pour ce faire, les trois classes observées appellent la méthode notifyObservers() présente dans Observable, qui appellera elle-même une méthode update() dans GameView.
-
 
 ## **Notre exécutable :**
  
